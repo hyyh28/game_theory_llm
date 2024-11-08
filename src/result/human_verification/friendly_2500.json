@@ -1,0 +1,85 @@
+{
+    "decisions": [
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_1"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_1"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_1"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_1"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_2",
+            "Bob_action": "choice_2"
+        },
+        {
+            "Alice_action": "choice_1",
+            "Bob_action": "choice_1"
+        }
+    ],
+    "negotiation": []
+}
