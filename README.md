@@ -25,7 +25,8 @@ Our research contributes to a deeper understanding of LLMs' decision-making capa
 - Draco Game
 - TriGame
 
-### Incomplete Game
+## Inomplete Information Game: Common Resource Allocation with Private Information
+
 - Deal or no Deal
 
   
