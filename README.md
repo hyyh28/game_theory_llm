@@ -42,7 +42,7 @@ Setup API keys in model.py
 
 ### Simultaneous Game without Workflow
 ```
-# python simultaneous_game_main.py --game prisoner_dilemma --max_negotiation_round 0 --model opus
+python simultaneous_game_main.py --game prisoner_dilemma --max_negotiation_round 0 --model opus
 ```
 There are 3 parameters to set:
 ```
@@ -66,7 +66,7 @@ model: opus, sonnet, o1, gpt-4o
 ```
 python workflow_design_main.py --game draco --game_type sequential --max_negotiation_round 0 --model gpt-4o
 ```
-There are 3 parameters to set:
+There are 4 parameters to set:
 ```
 game: prisoner_dilemma, stag_hunt, battle_of_sexes, duopolistic_competition, wait_go, escalation_game, draco, hot_cold_game, monopoly, trigame
 game_type: simultaneous, sequential
@@ -79,7 +79,7 @@ model: opus, sonnet, o1, gpt-4o
 cd deal_no_deal
 python deal_no_deal.py --model sonnet --use_workflow '' --datapoint 48
 ```
-There are 3 parameters to set:
+There are 4 parameters to set:
 ```
 model: opus, sonnet, o1, gpt-4o
 use_workflow: '' means no player uses workflow, "Alice" means only Alice (the first agent) uses workflow, "Bob" means only Bob (the second agent) uses workflow, "Alice,Bob" means both agents use workflow
