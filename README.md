@@ -90,12 +90,4 @@ datapoint: any integer between 0 - 50
 ## License
 The source code of WarAgent is licensed under [Apache 2.0](https://github.com/tatsu-lab/stanford_alpaca/blob/main/LICENSE). The intended purpose is solely for research use.
 
-## Reference
-```
-@article{hua2024game,
-  title={Game-theoretic LLM: Agent Workflow for Negotiation Games},
-  author={Hua, Wenyue and Liu, Ollie and Li, Lingyao and Amayuelas, Alfonso and Chen, Julie and Jiang, Lucas and Jin, Mingyu and Fan, Lizhou and Sun, Fei and Wang, William and others},
-  journal={arXiv preprint arXiv:2411.05990},
-  year={2024}
-}
-```
+
