@@ -88,6 +88,6 @@ datapoint: any integer between 0 - 50
 ```
 
 ## License
-The source code of WarAgent is licensed under [Apache 2.0](https://github.com/tatsu-lab/stanford_alpaca/blob/main/LICENSE). The intended purpose is solely for research use.
+The source code of Game-theoretic LLM is licensed under [Apache 2.0](https://github.com/tatsu-lab/stanford_alpaca/blob/main/LICENSE). The intended purpose is solely for research use.
 
 
