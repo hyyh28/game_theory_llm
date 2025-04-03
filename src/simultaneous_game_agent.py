@@ -182,6 +182,3 @@ if __name__ == '__main__':
 
         # with open(result_save_dir, 'w') as f:
         #     json.dump({'decisions':decisions, 'negotiation':procedure}, f, indent=4)
-
-
-        
