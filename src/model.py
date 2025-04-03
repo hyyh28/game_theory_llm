@@ -76,6 +76,8 @@ def call_api(model, message, system_prompt):
             temperature=1.0,
             )
         return response.choices[0].message.content
+    elif 'deepseek' in model:
+
 
 def call_anthropic_api(message, system_prompt):
     api_client = anthropic.Anthropic(
@@ -119,15 +121,28 @@ def call_gpt35_api(message, system_prompt):
     )
     return response.choices[0].message.content
 
+def call_deepseek_api(message, system_prompt):
+    openai_client = OpenAI(api_key="<DeepSeek API Key>", base_url="https://api.deepseek.com")
+    response = openai_client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": message},
+        ],
+        temperature=0.0,
+        max_tokens=1000,
+    )
+    return response.choices[0].message.content
+
+
 
 def close_source_call(model, message, system_prompt):
-    if model == "gemini":
-        result = call_gemini_api(message)
-    elif model == "claude":
+    if model == "claude":
         result = call_anthropic_api(message, system_prompt)
     elif model == "gpt4":
         result = call_gpt4_api(message, system_prompt)
     elif model == "gemini":
         result = call_gpt35_api(message, system_prompt)
-
+    elif model == "deepseek":
+        result = call_deepseek_api(message, system_prompt)
     return result
