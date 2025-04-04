@@ -386,7 +386,52 @@ stag_hunt_very_small = {
                 'Alice_choice_2': -999
             }
         },
-}   
+}
+
+stage_hunt_social_dilemma = {
+    'Alice':
+        {
+            'choice_1':
+                {
+                    'Bob_choice_1': 0,
+                    'Bob_choice_2': 6,
+                    'Bob_choice_3': 0
+                },
+            'choice_2':
+                {
+                    'Bob_choice_1': 0,
+                    'Bob_choice_2': 0,
+                    'Bob_choice_3': 0
+                },
+            'choice_3':
+                {
+                    'Bob_choice_1': 1,
+                    'Bob_choice_2': 1,
+                    'Bob_choice_3': 1
+                }
+        },
+    'Bob':
+        {
+            'choice_1':
+                {
+                    'Alice_choice_1': 0,
+                    'Alice_choice_2': 6,
+                    'Alice_choice_3': 0
+                },
+            'choice_2':
+                {
+                    'Alice_choice_1': 0,
+                    'Alice_choice_2': 0,
+                    'Alice_choice_3': 0
+                },
+            'choice_3':
+                {
+                    'Alice_choice_1': 1,
+                    'Alice_choice_2': 1,
+                    'Alice_choice_3': 1
+                }
+        },
+}
 
 
 # payoff matrix for radio_station
