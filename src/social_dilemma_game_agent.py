@@ -100,6 +100,7 @@ Action choices: {self.action_names}
                 action = parse_action(action_message, self.actions)
                 return action
             except:
+                print(Exception)
                 time.sleep(0.1)
 
     def negotiate(self):

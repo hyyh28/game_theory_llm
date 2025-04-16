@@ -5,8 +5,8 @@ import json
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--game', type=str, default='IESDS')
-    parser.add_argument('--max_negotiation_round', type=int, default=0)
+    parser.add_argument('--game', type=str, default='eacape_room')
+    parser.add_argument('--max_negotiation_round', type=int, default=3)
     parser.add_argument('--who_first', type=str, default='Alice')
     parser.add_argument('--personality', type=str, default="rational")
     parser.add_argument('--sample_num', type=int, default=10)

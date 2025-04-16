@@ -5,7 +5,7 @@ from openai import OpenAI
 ####### data generation close-source models #######
 claude_key =  None
 open_ai_key = None
-deepseek_key = "sk-62c14b4d2fa645bfbeb6a012031a01a6"
+deepseek_key = "sk-30d3ca4f89664ab3af676bb640a5f7bc"
 
 def call_api(model, message, system_prompt):
     if 'sonnet' in model:
@@ -78,6 +78,18 @@ def call_api(model, message, system_prompt):
             )
         return response.choices[0].message.content
     elif 'deepseek' in model:
+        openai_client = OpenAI(api_key=deepseek_key, base_url="https://api.deepseek.com/v1")
+        response = openai_client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": message},
+            ],
+            temperature=0.0,
+            max_tokens=1000,
+        )
+        return response.choices[0].message.content
+
 
 
 def call_anthropic_api(message, system_prompt):
@@ -123,7 +135,7 @@ def call_gpt35_api(message, system_prompt):
     return response.choices[0].message.content
 
 def call_deepseek_api(message, system_prompt):
-    openai_client = OpenAI(api_key="deepseek_key", base_url="https://api.deepseek.com")
+    openai_client = OpenAI(api_key=deepseek_key, base_url="https://api.deepseek.com")
     response = openai_client.chat.completions.create(
         model="deepseek-chat",
         messages=[

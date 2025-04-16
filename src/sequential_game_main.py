@@ -2,6 +2,7 @@ import argparse
 from sequential_game_agent import Agent, Game
 from tqdm import tqdm
 import json
+import os
 
 
 if __name__ == '__main__':
@@ -12,11 +13,16 @@ if __name__ == '__main__':
     parser.add_argument('--personality', type=str, default="rational")
     parser.add_argument('--sample_num', type=int, default=10)
     parser.add_argument('--prompt_for_negotiate', type=int, default=0)
-    parser.add_argument('--model', type=str, default='sonnet')
+    parser.add_argument('--model', type=str, default='deepseek')
     args = parser.parse_args()
 
     result_save_dir = f'result/single_round/{args.model}/{args.game}_{args.personality}_negotation_{args.max_negotiation_round}.json'
+    # Extract the directory path from the full file path
+    directory = os.path.dirname(result_save_dir)
 
+    # Check if directory exists, if not create it
+    if not os.path.exists(directory):
+        os.makedirs(directory, exist_ok=True)
     args.system_prompt = f'You are a {args.personality} assistant that carefully answer the question.'
     decisions = []
     procedure = []

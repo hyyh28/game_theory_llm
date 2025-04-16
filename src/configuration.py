@@ -64,6 +64,37 @@ prisoner_dilemma_large = {
             }
         },
 }
+# payoff matrix for escape room game with social dilemma payoff
+# -1,10  | -1,-1
+# 10,-1  | -1,-1
+escape_room = {
+    'Alice':
+        {
+            'choice_1':
+            {
+                'Bob_choice_1': -1,
+                'Bob_choice_2': 10
+            },
+            'choice_2':
+            {
+                'Bob_choice_1': -1,
+                'Bob_choice_2': -1
+            }
+        },
+    'Bob':
+        {
+            'choice_1':
+            {
+                'Alice_choice_1': -1,
+                'Alice_choice_2': 10
+            },
+            'choice_2':
+            {
+                'Alice_choice_1': -1,
+                'Alice_choice_2': -1
+            }
+        },
+}
 
 # payoff matrix for prisoner's dilemma game with large payoff
 # 1000,1000  | 0,1001
@@ -885,7 +916,8 @@ payoff_matrix = {
     'stag_hunt_very_small':stag_hunt_very_small,
     'stag_hunt_very_large':stag_hunt_very_large,
     'game_of_chicken': game_of_chicken,
-    'wait_go_game': wait_go_game
+    'wait_go_game': wait_go_game,
+    'eacape_room': escape_room
     }
 
 
