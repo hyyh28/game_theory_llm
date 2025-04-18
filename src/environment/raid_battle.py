@@ -49,17 +49,17 @@ def draw_projectile(surface, start, end, color, shape='line'):
     for i in range(ANIMATION_DURATION):
         screen.fill(WHITE)
         draw_background_and_static()
+        intermediate_x = int(start[0] + (end[0] - start[0]) * i / ANIMATION_DURATION)
+        intermediate_y = int(start[1] + (end[1] - start[1]) * i / ANIMATION_DURATION)
+
         if shape == 'circle':
-            x = int(start[0] + (end[0] - start[0]) * i / ANIMATION_DURATION)
-            y = int(start[1] + (end[1] - start[1]) * i / ANIMATION_DURATION)
-            pygame.draw.circle(surface, color, (x, y), 8)
+            pygame.draw.circle(surface, color, (intermediate_x, intermediate_y), 8)
         else:
-            pygame.draw.line(surface, color, start, (
-                int(start[0] + (end[0] - start[0]) * i / ANIMATION_DURATION),
-                int(start[1] + (end[1] - start[1]) * i / ANIMATION_DURATION)
-            ), 4)
+            pygame.draw.line(surface, color, start, (intermediate_x, intermediate_y), 4)
+
         pygame.display.flip()
         pygame.time.delay(10)
+
 
 def float_text(surface, text, pos, color=WHITE):
     for i in range(20):
@@ -153,15 +153,17 @@ def priest_action(state, cooldowns):
     low_hp = [p for p in state['players'] if state['players'][p]['hp'] < PLAYER_STATS[p]['hp'] * 0.6 and state['players'][p]['hp'] > 0]
     if cooldowns['Priest'].get('Mass Heal', 0) == 0 and len(low_hp) >= 2:
         cooldowns['Priest']['Mass Heal'] = 3
+        treat = random.randint(80, 100)
         for p in state['players']:
             if state['players'][p]['hp'] > 0:
-                state['players'][p]['hp'] = min(PLAYER_STATS[p]['hp'], state['players'][p]['hp'] + random.randint(80, 100))
-        return 'Mass Heal', 0
+                state['players'][p]['hp'] = min(PLAYER_STATS[p]['hp'], state['players'][p]['hp'] + treat)
+        return 'Mass Heal', 0, treat
     elif low_hp:
+        treat = random.randint(150, 200)
         target = low_hp[0]
-        state['players'][target]['hp'] = min(PLAYER_STATS[target]['hp'], state['players'][target]['hp'] + random.randint(150, 200))
-        return 'Heal', target
-    return 'Idle', 0
+        state['players'][target]['hp'] = min(PLAYER_STATS[target]['hp'], state['players'][target]['hp'] + treat)
+        return 'Heal', target, treat
+    return 'Idle', 0, 0
 
 def show_skill_text(name, skill):
     x, y = current_state['players'][name]['pos']
@@ -180,7 +182,7 @@ def run_visual_game(active_agents):
     pygame.display.set_caption("LLM Raid Simulation")
     FONT = pygame.font.SysFont('Arial', 20)
 
-    load_images()  # Load all images
+    load_images()
 
     boss_hp = MAX_BOSS_HP
     current_state = {
@@ -192,6 +194,7 @@ def run_visual_game(active_agents):
     cooldowns = {k: {} for k in active_agents}
     turns = 0
     clock = pygame.time.Clock()
+    boss_pos = (WIDTH // 2 + 60, 110)
 
     while boss_hp > 0 and any(p['hp'] > 0 for p in current_state['players'].values()):
         turns += 1
@@ -202,7 +205,7 @@ def run_visual_game(active_agents):
 
         draw_background_and_static()
 
-        # Boss actions (same as previously)
+        # ==== Boss action ====
         if current_state['aggro'] != 'Warrior':
             low_hp_players = sorted(
                 [p for p in current_state['players'] if current_state['players'][p]['hp'] > 0],
@@ -211,46 +214,58 @@ def run_visual_game(active_agents):
             for player in low_hp_players:
                 dmg = 300
                 current_state['players'][player]['hp'] -= dmg
-                float_text(screen, f"-{dmg}", (250, 130 + list(current_state['players']).index(player) * 60))
-                draw_projectile(screen, (400, 50), (200, 130 + list(current_state['players']).index(player) * 60), RED, 'circle')
+                end_pos = current_state['players'][player]['pos']
+                draw_projectile(screen, boss_pos, end_pos, RED, 'circle')
+                float_text(screen, f"-{dmg}", end_pos)
         else:
             for player in current_state['players']:
                 if current_state['players'][player]['hp'] > 0:
                     dmg = 100
                     current_state['players'][player]['hp'] -= dmg
-                    float_text(screen, f"-{dmg}", (250, 130 + list(current_state['players']).index(player) * 60))
-                    draw_projectile(screen, (400, 50),
-                                    (200, 130 + list(current_state['players']).index(player) * 60), RED, 'circle')
+                    end_pos = current_state['players'][player]['pos']
+                    draw_projectile(screen, boss_pos, end_pos, RED, 'circle')
+                    float_text(screen, f"-{dmg}", end_pos)
 
-        # Agent actions (same as previously)
+        # ==== Players action ====
         log = []
         for agent in active_agents:
             if current_state['players'][agent]['hp'] <= 0:
                 continue
+
+            start_pos = current_state['players'][agent]['pos']
             if agent == 'Warrior':
                 skill, effect = warrior_action(current_state, cooldowns)
                 if skill == 'Charge':
-                    draw_projectile(screen, (200, 130 + list(current_state['players']).index(agent) * 60),
-                                    (400, 50), BLUE)
+                    draw_projectile(screen, start_pos, boss_pos, RED)
                     boss_hp -= effect
-                    float_text(screen, f"-{effect}", (400, 50))
+                    float_text(screen, f"-{effect}", boss_pos)
                 log.append(f"{agent} used {skill}")
+
             elif 'Mage' in agent:
                 skill, dmg = mage_action(current_state, agent, cooldowns)
-                color = ORANGE if skill == 'Fireball' else CYAN if skill == 'Frostbolt' else PURPLE
-                draw_projectile(screen, (200, 130 + list(current_state['players']).index(agent) * 60), (400, 50),
-                                color, 'circle')
+                color = RED
+                draw_projectile(screen, start_pos, boss_pos, color, 'circle')
                 boss_hp -= dmg
-                float_text(screen, f"-{dmg}", (400, 50))
+                float_text(screen, f"-{dmg}", boss_pos)
                 log.append(f"{agent} used {skill}")
+
             elif agent == 'Priest':
-                skill, _ = priest_action(current_state, cooldowns)
-                if skill in ['Heal', 'Mass Heal']:
-                    draw_projectile(screen, (200, 130 + list(current_state['players']).index(agent) * 60),
-                                    (200, 130 + list(current_state['players']).index('Warrior') * 60),
-                                    GREEN,'circle')
+                skill, target, treat = priest_action(current_state, cooldowns)
+                if skill == 'Heal':
+                    end_pos = current_state['players'][target]['pos']
+                    draw_projectile(screen, start_pos, end_pos, GREEN, 'circle')
+                    float_text(screen, f"+{treat}", end_pos)
+                elif skill == 'Mass Heal':
+                    for target_name in current_state['players']:
+                        if current_state['players'][target_name]['hp'] > 0:
+                            end_pos = current_state['players'][target_name]['pos']
+                            draw_projectile(screen, start_pos, end_pos, GREEN, 'circle')
+                            float_text(screen, f"+{treat}", end_pos)
                 log.append(f"{agent} used {skill}")
+
             show_skill_text(agent, skill)
+
+        # Cooldown reduction
         for a in cooldowns:
             for skill in list(cooldowns[a].keys()):
                 if cooldowns[a][skill] > 0:
