@@ -102,6 +102,90 @@ class BattleEngine:
         print("==================\n")
         self.turn_log.clear()
 
+    def generate_global_prompt(self):
+        state = self.state
+
+        # Calculate battle metrics
+        alive_count = sum(1 for p in state['players'].values() if p['hp'] > 0)
+        boss_hp_percent = state['boss_hp'] / MAX_BOSS_HP
+        shielded_players = sum(1 for p in state['players'].values() if p['shielded'])
+
+        # Build prompt sections
+        prompt = f"""=== RAID BATTLE STATUS===
+
+        [BOSS STATUS]
+        - HP: {state['boss_hp']}/{MAX_BOSS_HP} ({boss_hp_percent:.1%})
+        - Current Aggro: {state['aggro'] or "None"}
+        - Threat Level: {"HIGH" if state['aggro'] != "Warrior" else "NORMAL"}
+
+        [PARTY STATUS] ({alive_count}/4 alive | {shielded_players} shielded)
+        """
+
+        # Add detailed player status
+        for name in ['Warrior', 'Mage1', 'Mage2', 'Priest']:
+            player = state['players'][name]
+            status = []
+
+            # Health status
+            if player['hp'] <= 0:
+                status.append("DEAD")
+            else:
+                hp_percent = player['hp'] / player['max_hp']
+                status.append(f" {player['hp']}/{player['max_hp']} ({hp_percent:.0%})")
+
+                # Special statuses
+                if player['shielded']:
+                    status.append("SHIELDED")
+                if state['aggro'] == name:
+                    status.append("AGGRO")
+
+            # Cooldowns
+            cds = [f"{k}({v})" for k, v in self.cooldowns[name].items() if v > 0]
+
+            prompt += f"""
+        [{name.upper()}]
+        - Status: {', '.join(status)}
+        - Cooldowns: {', '.join(cds) if cds else 'None'}
+        - Position: {'Front' if name == 'Warrior' else 'Back'}
+        """
+
+        # Add battle log
+        battle_log = '\n'.join(self.turn_log[-3:]) if self.turn_log else 'No actions recorded yet'
+        prompt += f"""
+                [BATTLE LOG]
+                {battle_log}
+                """
+
+        # Add detailed action spaces for each agent type
+        prompt += """
+            [AGENT ACTION SPACES]
+
+            [WARRIOR ACTIONS]
+            1. Charge (Deal 50-70 damage to boss)
+            2. Taunt (Force boss aggro, CD:3)
+            3. Shield Block (Gain damage shield, CD:2) 
+            4. Basic Attack (Deal 30-40 damage)
+
+            [MAGE ACTIONS]
+            1. Arcane Blast (Deal 150-180 damage, CD:3)
+            2. Fireball (Deal 100-130 damage)
+            3. Frostbolt (Deal 90-110 damage)
+            4. Mana Shield (Convert mana to HP, CD:4)
+
+            [PRIEST ACTIONS]
+            1. Heal (Restore 150-200 HP to ally)
+            2. Mass Heal (Restore 80-100 HP to all, CD:3)
+            3. Smite (Deal 40-60 damage to boss)
+            4. Divine Shield (Prevent 300 damage, CD:5)
+
+            [RESPONSE INSTRUCTIONS]
+            Each agent must respond with ONLY their action number (1-4)
+            based on their role and current status.
+            """
+
+        return prompt
+
+
 
 def fake_policy(agent, state, cooldowns):
     if agent == 'Warrior':
