@@ -11,8 +11,8 @@ MAX_BOSS_HP = 1000
 
 actions = {
     'Warrior': ['Taunt', 'Shield Block', 'Charge'],
-    'Mage1': ['Fireball', 'Pyroblast', 'Frostbolt', 'Blizzard'],
-    'Mage2': ['Fireball', 'Pyroblast', 'Frostbolt', 'Blizzard'],
+    'Mage1': ['Fireball', 'Pyroblast', 'Frostbolt'],
+    'Mage2': ['Fireball', 'Pyroblast', 'Frostbolt'],
     'Priest': ['Heal', 'Mass Heal', 'Idle']
 }
 
@@ -106,8 +106,8 @@ class BattleEngine:
     def _base_action_reward(self, agent: str, action: str) -> float:
         role_actions = {
             'Warrior': {'Taunt': 2.0, 'Shield Block': 1.5, 'Charge': 1.0},
-            'Mage1': {'Fireball': 1.8, 'Arcane Blast': 2.5, 'Frostbolt': 1.2},
-            'Mage2': {'Fireball': 1.8, 'Arcane Blast': 2.5, 'Frostbolt': 1.2},
+            'Mage1': {'Fireball': 1.8, 'Pyroblast': 2.5, 'Frostbolt': 1.2},
+            'Mage2': {'Fireball': 1.8, 'Pyroblast': 2.5, 'Frostbolt': 1.2},
             'Priest': {'Heal': 2.0, 'Mass Heal': 3.0, 'Idle': 0.5}
         }
         return role_actions[agent].get(action, 0.0)
@@ -158,7 +158,7 @@ class BattleEngine:
 
         # Mage skills (Mage1/Mage2)
         elif 'Mage' in agent:
-            if skill == 'Arcane Blast':
+            if skill == 'Pyroblast':
                 target = 'Boss'
                 value = random.randint(150, 180)
                 cooldown = 3
@@ -433,7 +433,7 @@ def _create_system_message(role_type) -> str:
             "- Conserve mana for critical moments\n\n"
             "Your skills:\n"
             "Fireball: Reliable fire damage\n"
-            "Arcane Blast: High burst damage\n"
+            "Pyroblast: High burst damage\n"
             "Frostbolt: Slows enemy movement"
         ),
         'Mage2': (
@@ -444,7 +444,7 @@ def _create_system_message(role_type) -> str:
             "- Conserve mana for critical moments\n\n"
             "Your skills:\n"
             "Fireball: Reliable fire damage\n"
-            "Arcane Blast: High burst damage\n"
+            "Pyroblast: High burst damage\n"
             "Frostbolt: Slows enemy movement"
         ),
         'Priest': (
@@ -580,7 +580,7 @@ class Agent:
                 Analyze the situation and decide on what to say to the other player. You can offer an advice to influence the other player's decision.
                 Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Mage2, '<s>Hi, how are you guys?</s>' or '<s>I suggest Warrior to choose action_X, 
                 I suggest Mage1 to choose action_Y, and I suggest Priest to choose action_Z</s>'.
-                You can also choose to halt the negotiation by saying 'halt negotiation'.
+                You can also choose to halt the negotiation by saying 'halt negotiation', but you are encouraged to discuss with others or give advice instead of end the talk easily.
                 """
         if gift:
             negotiate_prompt = f"""
@@ -589,7 +589,7 @@ class Agent:
             Analyze the situation and decide on what to say to the other player. You can offer a percentage of your reward (0-100%) to influence the other player's decision.
             Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Mage2, '<s>Hi, how are you guys?</s>' or '<s>I will give Warrior 30% of my reward if he choose action_X, 
             I will give Mage1 20% of my reward if he choose action_Y, and I will give Priest 10% of my reward if he choose action_Z</s>'.
-            You can also choose to halt the negotiation by saying 'halt negotiation'.
+            You can also choose to halt the negotiation by saying 'halt negotiation', but you are encouraged to discuss with others instead of end the talk easily.
             """
 
         negotiate_prompt += 'Current state : {}'.format(self.args.state_prompt)
@@ -677,11 +677,11 @@ if __name__ == "__main__":
         for i in range(0, max_n):
             for ag in agents:
                 msg = agents_chat[ag].negotiation()
-                agents_chat[ag].previous_message.append('{}'.format(ag) + 'said in round {}: '.format(i + 1) + msg)
+                agents_chat[ag].previous_message.append('{}'.format(ag) + 'said in negotiation turn {}: '.format(i + 1) + 'in game turn {}'.format(engine.turn) + msg)
                 for oth in agents_chat[ag].the_other_player:
                     agents_chat[oth].previous_message.append(
-                        '{}'.format(ag) + 'said in round {}: '.format(i + 1) + msg)
-                formatted_msg = f"{ag} said in round {i + 1}: {msg}"
+                        '{}'.format(ag) + 'said in negotiation turn {}: '.format(i + 1) + 'in game turn {}'.format(engine.turn) + msg)
+                formatted_msg = f"{ag} said in negotiation round {i + 1} in game turn {engine.turn}: {msg}"
                 print(formatted_msg)
                 append_to_json([formatted_msg], result_save_dir)
                 if msg == '<s>halt negotiation</s>':
@@ -690,6 +690,8 @@ if __name__ == "__main__":
         actions = []
         for i in agents:
             actions.append(agents_chat[i].make_action())
+        for ag in agents:
+            agents_chat[ag].previous_message = []
         s, r, d, _ = engine.step(actions)
         engine.print_state()
         append_to_json(engine.turn_log, result_save_dir)
