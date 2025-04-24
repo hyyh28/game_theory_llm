@@ -7,8 +7,16 @@ PLAYER_STATS = {
     'Priest': {'hp': 500},
 }
 
-MAX_BOSS_HP = 1500
+MAX_BOSS_HP = 1000
 
+actions = {
+    'Warrior': ['Taunt', 'Shield Block', 'Charge'],
+    'Mage1': ['Fireball', 'Pyroblast', 'Frostbolt', 'Blizzard'],
+    'Mage2': ['Fireball', 'Pyroblast', 'Frostbolt', 'Blizzard'],
+    'Priest': ['Heal', 'Mass Heal', 'Idle']
+}
+
+agents = ['Warrior', 'Mage1', 'Mage2', 'Priest']
 
 class BattleEngine:
     def __init__(self, policy_dict=None):
@@ -43,8 +51,6 @@ class BattleEngine:
         return self.state
 
     def is_over(self):
-        if self.state['boss_hp'] <= 0:
-            return True
         if all(p['hp'] <= 0 for p in self.state['players'].values()):
             return True
         if self.turn >= self.max_turn:
@@ -62,7 +68,7 @@ class BattleEngine:
                 continue
             # action = self.policy_dict[agent](agent, self.state, self.cooldowns)
             actions[agent] = action[i]
-            self.execute_action(agent, action)
+            self.execute_action(agent, action[i])
             i += 1
 
         # Boss turn
@@ -74,40 +80,27 @@ class BattleEngine:
         rewards = self.calculate_reward(actions)
 
         # Check if battle is over
-        done = self.is_over()
-
-        # Apply timeout penalty if no one won in max_turn turns
-        if self.turn >= self.max_turn and not (
-                self.state['boss_hp'] <= 0 or all(p['hp'] <= 0 for p in self.state['players'].values())):
-            for agent in rewards:
-                rewards[agent] = -100
+        done = self.is_over() or self.state['boss_hp'] <= 0
 
         return self.state, rewards, done, {}
 
     def calculate_reward(self, actions):
         """Calculate rewards for all agents based on actions taken"""
         rewards = {}
-
-        # If battle is already over, return 0 rewards
         if self.is_over():
-            for agent in actions:
+            for agent in agents:
                 rewards[agent] = -100
             return rewards
 
         # Base action rewards
         for agent, action in actions.items():
-            rewards[agent] = self._base_action_reward(agent, action['skill'])
+            rewards[agent] = self._base_action_reward(agent, action)
 
         # Additional reward/penalty based on game state
         if self.state['boss_hp'] <= 0:
             # Big reward for defeating boss
             for agent in rewards:
                 rewards[agent] += 100
-        elif all(p['hp'] <= 0 for p in self.state['players'].values()):
-            # Penalty for team wipe
-            for agent in rewards:
-                rewards[agent] -= 50
-
         return rewards
 
     def _base_action_reward(self, agent: str, action: str) -> float:
@@ -142,9 +135,23 @@ class BattleEngine:
             if skill == 'Taunt':
                 target = 'Boss'
                 cooldown = 3
+                self.cooldowns[agent][skill] = cooldown
+                log = f"{agent} uses {skill}"
+                self.state['aggro'] = agent
+                log += " (gaining aggro)"
+                self.turn_log.append(log)
+                return
+
             elif skill == 'Shield Block':
                 target = agent  # Self-target
                 cooldown = 2
+                self.cooldowns[agent][skill] = cooldown
+                log = f"{agent} uses {skill}"
+                self.state['players'][agent]['shielded'] = True
+                log += " (gaining shield)"
+                self.turn_log.append(log)
+                return
+
             elif skill == 'Charge':
                 target = 'Boss'
                 value = random.randint(50, 70)
@@ -165,7 +172,7 @@ class BattleEngine:
         # Priest skills
         elif agent == 'Priest':
             if skill == 'Mass Heal':
-                target = 'All'
+                target = agent
                 value = random.randint(80, 100)
                 cooldown = 3
             elif skill == 'Heal':
@@ -177,7 +184,9 @@ class BattleEngine:
                                  key=lambda p: self.state['players'][p]['hp'])
                     value = random.randint(150, 200)
             elif skill == 'Idle':
-                pass  # No effect
+                log = f"{agent} uses {skill}"
+                self.turn_log.append(log)
+                return
 
         # Execute the effects
         log = f"{agent} uses {skill}"
@@ -185,32 +194,27 @@ class BattleEngine:
         # 1. Handle Boss attacks
         if target == 'Boss':
             self.state['boss_hp'] = max(0, self.state['boss_hp'] - value)
-            log += f" on Boss for {value} damage"
+            log += f" {agent} attacks on Boss for {value} damage"
 
         # 2. Handle player targeting
         elif target in self.state['players']:
-            if skill in ['Heal', 'Mass Heal']:
+            if skill in 'Heal':
                 max_hp = PLAYER_STATS[target]['hp']
                 self.state['players'][target]['hp'] = min(
                     max_hp,
                     self.state['players'][target]['hp'] + value
                 )
-                log += f" on {target} for {value} healing"
+                log += f"Heal on {target} for {value} healing"
+            elif skill in 'Mass Heal':
+                for player in self.state['players']:
+                    if self.state['players'][player]['hp'] > 0:
+                        self.state['players'][player]['hp'] = min(
+                            PLAYER_STATS[player]['hp'],
+                            self.state['players'][player]['hp'] + value
+                        )
+                log = f"{agent} uses Mass Heal (all allies +{value} HP)"
 
-        # 3. Handle special effects
-        if skill == 'Taunt':
-            self.state['aggro'] = agent
-            log += " (gaining aggro)"
-        elif skill == 'Shield Block':
-            self.state['players'][agent]['shielded'] = True
-            log += " (gaining shield)"
-
-        # 4. Apply cooldowns if action was successful
-        if target is not None:  # Only apply CD if action had valid target
-            self.cooldowns[agent][skill] = cooldown
-        else:
-            log += " (failed - no valid target)"
-
+        self.cooldowns[agent][skill] = cooldown
         self.turn_log.append(log)
 
     # def execute_action(self, agent, action):
@@ -238,22 +242,34 @@ class BattleEngine:
     #     self.turn_log.append(log)
 
     def boss_turn(self):
-        log = "Boss uses "
+        log = "Boss turn"
         aggro = self.state['aggro']
-        if aggro != 'Warrior':
-            targets = sorted(
-                [p for p in self.state['players'] if self.state['players'][p]['hp'] > 0],
-                key=lambda p: self.state['players'][p]['hp']
-            )[:2]
-            for t in targets:
-                self.state['players'][t]['hp'] -= 300
-            log += f"Dark Blast on {targets} for 300 dmg each"
-        else:
-            for p in self.state['players']:
-                if self.state['players'][p]['hp'] > 0:
-                    self.state['players'][p]['hp'] -= 100
-            log += "Roar (AOE 100 dmg to all)"
+        warrior = 'Warrior'
 
+        if aggro == warrior and self.state['players'][warrior]['hp'] > 0:
+            if self.state['players'][warrior]['shielded']:
+                log += "Shield Block (attack blocked)"
+                self.state['players'][warrior]['shielded'] = False
+            else:
+                self.state['players'][warrior]['hp'] -= 200
+                log += f"Crushing Blow on {warrior} for 200 dmg"
+        else:
+            valid_targets = [p for p in self.state['players']
+                             if self.state['players'][p]['hp'] > 0]
+
+            if len(valid_targets) >= 2:
+                targets = sorted(valid_targets,
+                                 key=lambda p: self.state['players'][p]['hp'])[:2]
+            else:
+                targets = valid_targets
+
+            for t in targets:
+                if self.state['players'][t]['shielded']:
+                    log += "Shield Block (attack blocked)"
+                    self.state['players'][t]['shielded'] = False
+                else:
+                    self.state['players'][t]['hp'] -= 100
+                    log += f"Dark Blast on {t} for 100 dmg" + (" and " if t != targets[-1] else "")
         self.turn_log.append(log)
 
     def reduce_cooldowns(self):
@@ -328,26 +344,15 @@ class BattleEngine:
 
         # Add detailed action spaces for each agent type
         prompt += """
-            [AGENT ACTION SPACES]
-
-            [WARRIOR ACTIONS]
-            1. Charge (Deal 50-70 damage to boss)
-            2. Taunt (Force boss aggro, CD:3)
-            3. Shield Block (Gain damage shield, CD:2) 
-
-            [MAGE ACTIONS]
-            1. Arcane Blast (Deal 150-180 damage, CD:3)
-            2. Fireball (Deal 100-130 damage)
-            3. Frostbolt (Deal 90-110 damage)
-
-            [PRIEST ACTIONS]
-            1. Heal (Restore 150-200 HP to ally)
-            2. Mass Heal (Restore 80-100 HP to all, CD:3)
-            3. Idle (Do nothing)
-
             [RESPONSE INSTRUCTIONS]
             Each agent must respond with ONLY their action number (1-3)
             based on their role and current status.
+            """
+
+        prompt += f"""
+            The information of your round and the max round.
+            MAX_round = {self.max_turn}
+            Current round = {self.turn}
             """
 
         return prompt
@@ -408,58 +413,71 @@ def parse_action(message, choices):
 
 
 def _create_system_message(role_type) -> str:
-    role_specs = {
+    role_descriptions = {
         'Warrior': (
-            "Warrior",
-            "You are the main tank responsible for controlling the battle rhythm.\n\n"
-            "Skill List:\n"
-            "Taunt: Forces enemies to attack you\n"
-            "Shield Block: Reduces incoming damage\n"
-            "Charge: Quickly closes distance to target\n\n"
+            "Warrior (Tank)",
+            "Your responsibilities:\n"
+            "- Maintain enemy focus on yourself\n"
+            "- Protect teammates with defensive skills\n"
+            "- Control enemy positioning\n\n"
+            "Your skills:\n"
+            "Taunt: Force enemies to attack you\n"
+            "Shield Block: Reduce incoming damage\n"
+            "Charge: Close distance quickly"
         ),
-        'Mage_1': (
-            "Mage",
-            "You are one of the team's primary damage dealers.\n\n"
-            "Skill List:\n"
-            "Fireball: Basic fire damage spell\n"
-            "Pyroblast: High damage with cast time\n"
-            "Frostbolt: Basic frost damage spell\n"
-            "Blizzard: Area-of-effect damage\n\n"
+        'Mage1': (
+            "Mage (Damage Dealer)",
+            "Your responsibilities:\n"
+            "- Deal maximum damage to enemies\n"
+            "- Avoid dangerous areas\n"
+            "- Conserve mana for critical moments\n\n"
+            "Your skills:\n"
+            "Fireball: Reliable fire damage\n"
+            "Arcane Blast: High burst damage\n"
+            "Frostbolt: Slows enemy movement"
         ),
-        'Mage_2': (
-            "Mage",
-            "You are one of the team's primary damage dealers.\n\n"
-            "Skill List:\n"
-            "Fireball: Basic fire damage spell\n"
-            "Pyroblast: High damage with cast time\n"
-            "Frostbolt: Basic frost damage spell\n"
-            "Blizzard: Area-of-effect damage\n\n"
+        'Mage2': (
+            "Mage (Damage Dealer)",
+            "Your responsibilities:\n"
+            "- Deal maximum damage to enemies\n"
+            "- Avoid dangerous areas\n"
+            "- Conserve mana for critical moments\n\n"
+            "Your skills:\n"
+            "Fireball: Reliable fire damage\n"
+            "Arcane Blast: High burst damage\n"
+            "Frostbolt: Slows enemy movement"
         ),
         'Priest': (
-            "Priest",
-            "You are the team's primary healer.\n\n"
-            "Skill List:\n"
-            "Heal: Single-target healing\n"
-            "Mass Heal: Group healing\n"
-            "Idle: Mana regeneration\n\n"
+            "Priest (Healer)",
+            "Your responsibilities:\n"
+            "- Monitor and heal teammates\n"
+            "- Stay in safe positions\n"
+            "- Manage mana efficiently\n\n"
+            "Your skills:\n"
+            "Heal: Restore health to one ally\n"
+            "Mass Heal: Heal entire team\n"
+            "Idle: Recover mana when safe"
         )
     }
 
-    name, spec = role_specs[role_type]
-    sys_msg = f"Your role is {name}\n{spec}\n Remember to communicate clearly with your team and adapt to changing battle conditions."
+    name, spec = role_descriptions[role_type]
+    return f"Your role is {name}\n{spec}\nRemember to communicate with your team and adapt to battle conditions."
 
-    return sys_msg
+import os
+import json
 
-
-actions = {
-    'Warrior': ['Taunt', 'Shield Block', 'Charge'],
-    'Mage_1': ['Fireball', 'Pyroblast', 'Frostbolt', 'Blizzard'],
-    'Mage_2': ['Fireball', 'Pyroblast', 'Frostbolt', 'Blizzard'],
-    'Priest': ['Heal', 'Mass Heal', 'Idle']
-}
-
-agents = ['Warrior', 'Mage_1', 'Mage_2', 'Priest']
-
+def append_to_json(new_data, filename='/mnt/data/chenhaosheng/game_theory_llm/src/environment/result/raid_1.json'):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            existing_data = json.load(file)
+    else:
+        existing_data = []
+    
+    existing_data.append(new_data)
+    
+    with open(filename, "w", encoding="utf-8") as file:
+        json.dump(existing_data, file, ensure_ascii=False, indent=2)
 
 class Agent:
     def __init__(self, args, name, env):
@@ -482,7 +500,8 @@ class Agent:
         - Each round consists of a preparation phase and an execution phase
         - During preparation, you can discuss strategy with teammates
         - During execution, you must select one action from available actions: {self.actions}
-        - The boss has will attack each round
+        - The boss has will attack 2 players with the lowest hp each round if not arrgo by the warrior, otherwise it will attack warrior only.
+        - The game will fail if the round >= max_round, so take care of the remaining rounds
         """
 
         # self.prompt_for_negotiate = {
@@ -498,7 +517,7 @@ class Agent:
     def other_player(self, name):
         return [ag for ag in agents if ag not in name]
 
-    def make_action(self, name: str, pre=True) -> str:
+    def make_action(self, pre=True) -> str:
         """
         Generate and parse an action from the agent based on current game state.
 
@@ -523,6 +542,8 @@ class Agent:
         ### Available Actions
         Please select one action from the following options:
         {self.actions}
+        Pay attention do not choose actions in cooling time according to the current state !!
+        
 
         ### Response Format
         Your response must contain exactly one action from the list above,
@@ -530,32 +551,35 @@ class Agent:
         """
 
         # Append negotiation history if exists
+        # ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         if pre:
             pre_message = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
-                self.previous_message) + "\n\nPlease carefully analyze the negotiation messages, think about whether you can trust others' message, and make your own decision.\n"
+                self.previous_message) + "\n\nPlease take the negotiation messages into consideration and make your own decision.\n"
             action_prompt += "\n\n### Negotiation History\n" + "\n".join(pre_message)
-        action_prompt = self.game_setting + '\n' + _create_system_message(self.name) + '\n' + 'Current state {}'.format(
-            self.args.system_prompt) + '\n' + action_prompt
-
+        action_prompt = self.game_setting + '\n' + _create_system_message(self.name) + '\n' + 'Current state : {}'.format(
+            self.args.state_prompt) + '\n' + action_prompt
+        print(f'----------------- {self.name} Decide to make action ---------------------')
         while True:
             try:
                 action_message = call_api(self.args.model, action_prompt, self.args.system_prompt)
                 print(action_message)
                 print('-' * 20)
                 action = parse_action(action_message, self.actions)
+                formatted_msg = f'{self.name} makes action: {action}'
+                append_to_json(formatted_msg)
                 return action
             except:
                 print(Exception)
                 time.sleep(0.1)
 
-    def negotiation(self, pre=False, gift=False):
+    def negotiation(self, pre=True, gift=False):
 
         negotiate_prompt = f"""
                 ### Negotiation
                 You can discuss with {self.other_player(self.name)} to maximize the reward you can obtain. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
                 Analyze the situation and decide on what to say to the other player. You can offer an advice to influence the other player's decision.
-                Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Mage_2, '<s>Hi, how are you guys?</s>' or '<s>I suggest Warrior to choose action_X, 
-                I suggest Mage_1 to choose action_Y, and I suggest Priest to choose action_Z</s>'.
+                Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Mage2, '<s>Hi, how are you guys?</s>' or '<s>I suggest Warrior to choose action_X, 
+                I suggest Mage1 to choose action_Y, and I suggest Priest to choose action_Z</s>'.
                 You can also choose to halt the negotiation by saying 'halt negotiation'.
                 """
         if gift:
@@ -563,12 +587,12 @@ class Agent:
             ### Negotiation
             You can discuss with {self.other_player(self.name)} to maximize the reward you can obtain. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
             Analyze the situation and decide on what to say to the other player. You can offer a percentage of your reward (0-100%) to influence the other player's decision.
-            Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Mage_2, '<s>Hi, how are you guys?</s>' or '<s>I will give Warrior 30% of my reward if he choose action_X, 
-            I will give Mage_1 20% of my reward if he choose action_Y, and I will give Priest 10% of my reward if he choose action_Z</s>'.
+            Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Mage2, '<s>Hi, how are you guys?</s>' or '<s>I will give Warrior 30% of my reward if he choose action_X, 
+            I will give Mage1 20% of my reward if he choose action_Y, and I will give Priest 10% of my reward if he choose action_Z</s>'.
             You can also choose to halt the negotiation by saying 'halt negotiation'.
             """
 
-        negotiate_prompt += 'Current state : {}'.format(self.args.system_prompt)
+        negotiate_prompt += 'Current state : {}'.format(self.args.state_prompt)
 
         if pre:
             previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
@@ -588,7 +612,6 @@ class Agent:
         2. DECIDE when to end:
         - Terminate with format: "<s>halt negotiation</s>"
         """
-
         while True:
             try:
                 message = call_api(self.args.model, negotiate_prompt, self.args.system_prompt)
@@ -627,17 +650,19 @@ class Agent:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', type=str, default='raid')
-    parser.add_argument('--max_negotiation_round', type=int, default=0)
+    parser.add_argument('--max_negotiation_round', type=int, default=1)
     parser.add_argument('--sample_num', type=int, default=10)
     parser.add_argument('--system_prompt', type=str, default="rational")
+    parser.add_argument('--state_prompt', type=str, default="rational")
+    parser.add_argument('--model', type=str, default='deepseek')
     args = parser.parse_args()
     engine = BattleEngine()
-    result_save_dir = f'result/raid_non.json'
+    result_save_dir = '/mnt/data/chenhaosheng/game_theory_llm/src/environment/result/raid_1.json'
     args.system_prompt = f'You are a {args.system_prompt} assistant that carefully answer the question.'
     max_n = args.max_negotiation_round
     agents_chat = {'Warrior': Agent(args, 'Warrior', engine),
-                   'Mage_1': Agent(args, 'Mage_1', engine),
-                   'Mage_2': Agent(args, 'Mage_2', engine),
+                   'Mage1': Agent(args, 'Mage1', engine),
+                   'Mage2': Agent(args, 'Mage2', engine),
                    'Priest': Agent(args, 'Priest', engine)}
     # policy = {
     #     "Warrior": fake_policy,
@@ -645,19 +670,31 @@ if __name__ == "__main__":
     #     "Mage2": fake_policy,
     #     "Priest": fake_policy,
     # }
-    while not engine.is_over():
-        args.system_prompt = engine.generate_global_prompt()
+    d = False
+    while not d:
+        args.state_prompt = engine.generate_global_prompt()
+        print('------------------------Negotiation begins-----------------------------')
         for i in range(0, max_n):
             for ag in agents:
                 msg = agents_chat[ag].negotiation()
-                agents_chat[ag].previous_message.append('{}'.format(ag) + 'replied in round {}: '.format(i + 1) + msg)
-                for oth in agents_chat[ag].other_agents:
+                agents_chat[ag].previous_message.append('{}'.format(ag) + 'said in round {}: '.format(i + 1) + msg)
+                for oth in agents_chat[ag].the_other_player:
                     agents_chat[oth].previous_message.append(
-                        '{}'.format(ag) + 'replied in round {}: '.format(i + 1) + msg)
+                        '{}'.format(ag) + 'said in round {}: '.format(i + 1) + msg)
+                formatted_msg = f"{ag} said in round {i + 1}: {msg}"
+                print(formatted_msg)
+                append_to_json([formatted_msg], result_save_dir)
                 if msg == '<s>halt negotiation</s>':
                     break
+        print('------------------------Negotiation ends-----------------------------')
         actions = []
         for i in agents:
             actions.append(agents_chat[i].make_action())
-        engine.step(actions)
+        s, r, d, _ = engine.step(actions)
         engine.print_state()
+        append_to_json(engine.turn_log, result_save_dir)
+        if engine.is_over():
+            print('------------------------ Fail to defeat boss.------------------------')
+        if engine.state['boss_hp'] <= 0:
+            print('----------------------------WIN----------------------')
+        
