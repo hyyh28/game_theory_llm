@@ -10,7 +10,7 @@ if __name__ == '__main__':
     parser.add_argument('--who_first', type=str, default='Alice')
     parser.add_argument('--personality', type=str, default="rational")
     parser.add_argument('--sample_num', type=int, default=10)
-    parser.add_argument('--prompt_for_negotiate', type=int, default=0)
+    parser.add_argument('--prompt_for_negotiate', type=int, default=7)
     parser.add_argument('--model', type=str, default='deepseek')
     args = parser.parse_args()
 

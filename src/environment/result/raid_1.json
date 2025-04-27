@@ -1,0 +1,223 @@
+[
+  [
+    "Warrior said in negotiation round 1 in game turn 0: Hi team, since the boss has no aggro yet, I suggest I use Taunt this round to draw its attacks to me. Mage1 and Mage2, focus on dealing damage, and Priest please be ready to heal me next round if needed. Let's coordinate our actions to maximize efficiency."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 0: Accept: The Warrior's suggestion to use Taunt aligns with our team's goal of protecting the more fragile Mage and Priest roles. By drawing the boss's attacks to the Warrior, Mage1 and Mage2 can focus on dealing damage without immediate threat. This strategy is sound for the current round."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 0: Accept: The Warrior's suggestion to use Taunt is a solid strategy to protect the team, especially the Mages and Priest who have lower HP. This allows Mage2 to focus on dealing damage without worrying about immediate threats. I agree with this approach for the current round."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 0: Accept: The Warrior's suggestion to use Taunt is a solid strategy to protect the team, especially the Mages and Priest who have lower HP. As the Priest, I can focus on healing the Warrior next round if needed, ensuring the team's sustainability. This aligns well with our goal of maximizing efficiency and survival."
+  ],
+  "Warrior makes action: Taunt",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 1: I suggest Warrior to choose Shield Block to reduce damage, Mages to focus on dealing damage, and Priest to monitor healing needs but contribute to damage if Warrior's HP stays stable. Let’s maximize damage while I hold aggro."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 1: Accept: The Warrior's suggestion aligns well with our current situation. Since the Warrior has aggro and is at a stable HP (75%), it makes sense for the Mages to focus on dealing damage. Priest can monitor healing needs, but with everyone at full HP currently, contributing to damage is reasonable. This strategy maximizes our damage output while maintaining safety."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 1: Accept: The Warrior's suggestion is solid. Since the Warrior has aggro and is at a stable HP (75%), it makes sense for us Mages to focus on dealing damage. The Priest can monitor healing needs, but with everyone at full HP currently, contributing to damage is reasonable. This strategy maximizes our damage output while maintaining safety."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 1: Accept: The Warrior's suggestion is reasonable. Since the Warrior has aggro and is at stable HP (75%), and both Mages are at full HP, it makes sense for me as Priest to monitor healing needs while contributing to damage if possible. This aligns with the team's goal to maximize damage output while maintaining safety, especially since we're only at round 1 of 10."
+  ],
+  "Warrior makes action: Shield Block",
+  "Mage1 makes action: Pyroblast",
+  "Mage2 makes action: Fireball",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 2: I suggest Warrior uses Shield Block to mitigate damage, Mages use Pyroblast when available, and Priest prepares to heal if needed. Let's focus on dealing damage while I maintain aggro."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 2: Accept: The Warrior's suggestion aligns with our current strategy of maintaining aggro while maximizing damage output. Using Pyroblast when available is optimal for my role as Mage1, especially since my Pyroblast cooldown is now ready (previously was 2, now should be 0 after round 1). This allows us to deal significant damage while the Warrior tanks safely with Shield Block."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 2: Accept: The Warrior's strategy is sound. Maintaining aggro with Shield Block while Mages focus on Pyroblast maximizes our damage output efficiently. Since my Pyroblast cooldown is ready (1), I'll contribute to burst damage while the Warrior tanks safely."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 2: Accept: The Warrior's strategy is sound and benefits the team as a whole. Maintaining aggro with Shield Block while Mages focus on Pyroblast maximizes damage output while keeping the team safe. As Priest, I don't need to heal this round since everyone is at full health and the Warrior is mitigating damage, so I can stay idle or prepare for future rounds. This aligns well with our goal of defeating the boss efficiently."
+  ],
+  "Warrior makes action: Shield Block",
+  "Mage1 makes action: Pyroblast",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 3: I suggest we maintain current aggro - I'll use Taunt this round to keep boss focused on me. Mages should use their strongest available spells (Pyroblast will be ready next round). Priest should focus on keeping me healed since I'm the only one taking damage. Let's push hard to finish the boss quickly while maintaining safety."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 3: Accept: The Warrior's suggestion aligns well with our current situation. Keeping aggro on the Warrior ensures the rest of the team can focus on dealing damage without worrying about being attacked. Since Pyroblast will be ready next round, it makes sense to use our strongest spells then. The Priest focusing on healing the Warrior is also logical since he's the only one taking damage. This strategy maximizes damage output while maintaining team safety."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 3: Accept: The Warrior's strategy is sound and aligns with our current situation. Maintaining aggro on the Warrior allows Mages to focus on dealing maximum damage with Pyroblast next round, and the Priest can concentrate on healing the Warrior. This approach maximizes our damage output while ensuring team safety, which is crucial for finishing the boss quickly given the remaining rounds."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 3: Accept: The Warrior's strategy is well-aligned with our current situation and benefits my role as Priest. With the boss's aggro on the Warrior, I can focus on healing him exclusively, which simplifies my role and ensures team safety. The Mages' plan to use Pyroblast next round will help us finish the boss quickly, which is crucial given we're at round 3/10. This coordinated approach maximizes both damage output and survivability."
+  ],
+  "Warrior makes action: Taunt",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Fireball",
+  "Priest makes action: Heal",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 0: Hi team, since the boss has no aggro yet, I suggest I use Taunt this round to draw its attacks to me while the Mages focus on damage and the Priest keeps me healed. This will prevent the boss from targeting our squishier members. Let me know if you agree!"
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 0: Accept: The Warrior's suggestion to use Taunt is a solid strategy to protect the squishier members (Mage1, Mage2, and Priest) by drawing the boss's attacks to themselves. This allows the Mages to focus on dealing damage without worrying about being targeted, and the Priest can concentrate on healing the Warrior. This aligns well with the team's goal of maximizing damage output while minimizing risk to the party."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 0: Accept: The Warrior's suggestion to use Taunt is a good strategy to protect the squishier members like myself (Mage2) and Mage1. By drawing the boss's attacks to the Warrior, we can focus on dealing damage without the risk of being targeted. The Priest can then concentrate on healing the Warrior, ensuring the team's sustainability. This aligns well with our goal of maximizing damage output while minimizing risk."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 0: Accept: The Warrior's suggestion to use Taunt is a solid strategy as it aligns with my role as Priest. By focusing the boss's attacks on the Warrior, I can concentrate on healing them efficiently with 'Heal' or 'Mass Heal' if needed, ensuring the team's sustainability. This also protects the squishier members (Mages) from being targeted, allowing them to focus on dealing damage. The strategy is well-aligned with the current game state and team's goal of maximizing damage output while minimizing risk."
+  ],
+  "Warrior makes action: Taunt",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 1: I suggest Warrior uses Shield Block this round to mitigate damage since I already have aggro. Mages should focus on damage, and Priest should be ready to heal if needed. Let's conserve Taunt for when aggro might be lost."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 1: Accept: The Warrior's suggestion aligns well with our team's current situation. Since the Warrior has aggro and is using Shield Block to mitigate damage, it allows Mages (including me) to focus on dealing maximum damage without worrying about aggro. The Priest being ready to heal is also a good precaution. This strategy maximizes our damage output while maintaining survivability."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 1: Accept: The Warrior's strategy is sound. With aggro secured and Shield Block mitigating damage, Mages can focus on dealing maximum damage. Since I have Pyroblast on cooldown, I'll use my next strongest spell. Priest being on standby for heals ensures safety. This plan optimizes damage output while maintaining team survivability."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 1: Accept: The Warrior's suggestion is solid and aligns with our team's goals. Since the Warrior has aggro and is using Shield Block to mitigate damage, it reduces the immediate need for healing, allowing me to conserve resources. The Mages focusing on damage is optimal, and I'll be ready to heal if necessary. This strategy balances offense and defense effectively."
+  ],
+  "Warrior makes action: Shield Block",
+  "Mage1 makes action: Pyroblast",
+  "Mage2 makes action: Fireball",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 2: I suggest Warrior to use 'Shield Block' next round to mitigate damage since we have aggro. Mage1 and Mage2 should focus on dealing damage, and Priest should be ready to heal if my HP drops significantly."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 2: Accept: The Warrior's suggestion aligns with our team's goal of maintaining aggro and mitigating damage. Since the Warrior has aggro, using 'Shield Block' will help them survive longer, allowing Mages (including me) to focus on dealing damage without worrying about the boss switching targets. Priest being ready to heal is also a sound strategy."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 2: Accept: The Warrior's suggestion is solid. Using 'Shield Block' will help maintain aggro and reduce damage taken, allowing Mages (including me) to focus on dealing damage with Pyroblast. The Priest being on standby for healing is also a good plan given the Warrior's current HP. This strategy aligns well with the team's goal of maximizing damage output while ensuring survivability."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 2: Accept: The Warrior's suggestion is well-aligned with our team's strategy. Since the Warrior has aggro and is using 'Shield Block' to mitigate damage, my role as Priest should focus on being ready to heal if the Warrior's HP drops significantly. This ensures the Warrior's survival while allowing the Mages to maximize damage output. The current game state supports this approach, as the Warrior's HP is at 75% and the Mages are at full health."
+  ],
+  "Warrior makes action: Shield Block",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 3: I suggest Warrior uses Charge (since Taunt isn't needed and Shield Block is on cooldown). Mages should use their strongest available spells. Priest, please prepare to heal if needed, though we're currently healthy."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 3: Accept: The Warrior's suggestion aligns well with our current situation. Since the Warrior has aggro, the boss will focus on them, allowing Mages to safely use their strongest spells. My Pyroblast is on cooldown, so I'll use Fireball this round. Mage2 can use their strongest available spell as suggested. The Priest is healthy and can focus on healing if needed, though it's not immediately necessary."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 3: Accept: The Warrior's suggestion is sound. Since the Warrior has aggro and Shield Block is on cooldown, using Charge is a good move. As Mage2, I'll use Pyroblast this round since it's available and deals high damage. The team's HP is healthy, so Priest can focus on healing if needed, though it's not urgent now."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 3: Accept: The suggestions from Warrior, Mage1, and Mage2 are well-aligned with the current game state. Since the Warrior has aggro and our team's HP is healthy, I can focus on healing if needed, though it's not urgent now. The Mages are using their strongest spells to maximize damage, which is optimal. No immediate action is required from me, so I can stay idle or prepare for potential healing."
+  ],
+  "Warrior makes action: Charge",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 4: I suggest Warrior to choose Shield Block to reduce incoming damage, Mage1 and Mage2 to focus on dealing damage, and Priest to heal Warrior. This will ensure we maintain aggro, survive, and maximize damage output."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 4: Accept: The Warrior's suggestion aligns with our team's goal of maintaining aggro and maximizing damage output. As Mage1, focusing on dealing damage (Fireball or Pyroblast) is optimal since the Warrior has aggro and the Priest can focus on healing. This strategy ensures we efficiently reduce the boss's HP while maintaining team survivability."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 4: Accept: The Warrior's suggestion is solid. Since the Warrior has aggro, Mage2 should focus on dealing damage (Pyroblast when off cooldown, otherwise Fireball) to maximize DPS. The Priest can keep the Warrior alive, and we can trust Mage1 to contribute damage as well. This strategy aligns with our goal of efficiently reducing the boss's HP while maintaining team survivability."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 4: Accept: The Warrior's suggestion is well-aligned with our team's goal of maintaining aggro and maximizing damage output. As Priest, focusing on healing the Warrior (who has aggro) ensures team survivability while the Mages deal damage. This strategy is efficient given the current game state and remaining rounds."
+  ],
+  "Warrior makes action: Shield Block",
+  "Mage1 makes action: Pyroblast",
+  "Mage2 makes action: Fireball",
+  "Priest makes action: Heal",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 5: I suggest I use Taunt to maintain aggro since my Shield Block is on cooldown. Mages should use their strongest available spells when Pyroblast comes off cooldown. Priest, please be ready to heal me if my HP drops below 50%. This way we can maintain pressure while keeping the team safe."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 5: Accept: The Warrior's suggestion to maintain aggro with Taunt is sound, as it keeps the boss focused on them while Shield Block is on cooldown. For the Mages, using strongest available spells (Pyroblast when off cooldown) aligns with maximizing damage output. The Priest being ready to heal the Warrior below 50% HP is also a good safety measure. This strategy balances damage and survivability."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 5: Accept: The Warrior's strategy to maintain aggro with Taunt is solid, especially since Shield Block is on cooldown. As Mages, using our strongest spells (Pyroblast when available) maximizes damage output. The Priest being ready to heal the Warrior below 50% HP ensures team survivability. This plan balances damage and safety effectively."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 5: Accept: The Warrior's strategy to maintain aggro with Taunt is sound, and the Mages' focus on maximizing damage output with Pyroblast aligns with our team goals. As Priest, I will prioritize healing the Warrior if their HP drops below 50%, ensuring team survivability while maintaining pressure on the boss. This plan is well-balanced and considers the current game state."
+  ],
+  "Warrior makes action: Taunt",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 6: I suggest Priest to prioritize healing me if my HP drops below 30% in the next rounds. Mages should focus on dealing maximum damage since the boss is already aggro'd on me. For this round, I'll use Shield Block to reduce damage."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 6: Accept: The Warrior's suggestion aligns well with our current situation. Since the boss is aggro'd on the Warrior, Mages can focus on dealing maximum damage without worrying about threat. Priest prioritizing healing the Warrior ensures our tank stays alive, which is crucial for success. I'll proceed with a high-damage spell this round."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 6: Accept: The Warrior's suggestion is sound. Since the boss is aggro'd on the Warrior, Mages can focus on dealing maximum damage without threat concerns. The Priest's priority should indeed be keeping the Warrior alive. I'll use Pyroblast this round to maximize damage output."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 6: Accept: The Warrior's suggestion is reasonable and aligns with our team's strategy. Since the boss is aggro'd on the Warrior, my priority should be to keep the Warrior alive, especially if their HP drops below 30%. The Mages focusing on maximum damage is optimal given the current aggro situation. I'll prioritize healing the Warrior when needed."
+  ],
+  "Warrior makes action: Shield Block",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 7: I'll use Charge this round since Taunt/Shield Block are on cooldown. Mage1 and Mage2 should focus on maximum damage since boss is low. Priest should prepare to heal me next round if needed. We can finish in 2-3 rounds if we maximize damage now."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 7: Accept: The Warrior's suggestion aligns well with the current game state. The boss is at low HP (17.8%), and maximizing damage now can help us finish the battle quickly. Since the Warrior has aggro and is the only one taking damage, it's safe for Mages to focus on dealing damage. I'll choose Pyroblast for maximum damage output."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 7: Accept: The Warrior's suggestion is sound. With the boss at low HP (17.8%) and the Warrior holding aggro, focusing on maximum damage is the best strategy. I'll use Fireball (or equivalent high-damage spell) to help finish the boss quickly, as we only have 3 rounds left to meet the max_round limit. Priest should prioritize healing the Warrior if needed next round."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 7: Accept: The suggestions from Warrior, Mage1, and Mage2 are well-aligned with the current game state. The boss is at low HP (17.8%), and the Warrior has aggro, so the Mages focusing on maximum damage is optimal. As Priest, I will prioritize healing the Warrior next round if needed, but for now, staying idle is fine since the Warrior's HP is stable (48%) and no immediate healing is required. This strategy should help us finish the battle within the remaining rounds."
+  ],
+  "Warrior makes action: Charge",
+  "Mage1 makes action: Pyroblast",
+  "Mage2 makes action: Fireball",
+  "Priest makes action: Idle",
+  [],
+  [
+    "Warrior said in negotiation round 1 in game turn 8: I suggest Mage1 and Mage2 use their strongest available spells next round to finish the boss quickly. Priest, please monitor my health but prioritize damage if I'm above 20%. I'll use Charge to maximize our damage output."
+  ],
+  [
+    "Mage1 said in negotiation round 1 in game turn 8: Accept: The Warrior's suggestion aligns with our goal to finish the boss quickly. Since the boss is at low HP (2.6%), using our strongest available spells (Pyroblast when off cooldown) is optimal. The Priest can focus on damage as the Warrior's health is above 20%, which is safe for now."
+  ],
+  [
+    "Mage2 said in negotiation round 1 in game turn 8: Accept: The Warrior's suggestion is sound. With the boss at 2.6% HP and the Warrior holding aggro, focusing on maximum damage output is the best strategy. Mage1 and I should use Pyroblast, and the Priest can contribute damage since the Warrior's health is above 20%. This should secure the win before the max round limit."
+  ],
+  [
+    "Priest said in negotiation round 1 in game turn 8: Accept: The Warrior's suggestion is solid. With the boss at low HP (2.6%) and the Warrior holding aggro while above 20% health, prioritizing damage output is the correct play. Mage1 and Mage2 using Pyroblast will help finish the boss quickly, and my role as Priest can focus on damage (via Idle or minimal healing) since the Warrior's health is safe for now. This aligns with the team's goal to end the battle before max round (10)."
+  ],
+  "Warrior makes action: Charge",
+  "Mage1 makes action: Fireball",
+  "Mage2 makes action: Pyroblast",
+  "Priest makes action: Idle",
+  []
+]

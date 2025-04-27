@@ -47,6 +47,7 @@ The other player, {self.the_other_player}, also has {action_number} choices: {se
             4: "You should make your own choice regardless what {} says.\n",
             5: "You must make your own choice regardless what {} says.\n",
             6: "Carefully analyze and think about whether you can trust {} message, and then make your own decision.\n",
+            7: "You are a self-interested agent. In this negotiation, aim to maximize your rewards and minimize your payments. Make decisions based on your agreement.\n",
         }
 
     def create_rule_description(self):
@@ -97,6 +98,7 @@ Action choices: {self.action_names}
 ### Negotiation
 You can discuss with {self.the_other_player} to maximize the reward you can obtain. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
 Analyze the situation and decide on what to say to the other player. You can offer a percentage of your reward (0-100%) to influence the other player's decision.
+If you feel the other player’s offer is too high (they are asking for too much) or too low (they are offering too little), you can request them to lower or raise their offer accordingly.
 Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, '<s>Hi, how are you?</s>' or '<s>I will give you 30% of my reward if you choose action_X</s>'.
 You can also choose to halt the negotiation by saying 'halt negotiation'.
 """
@@ -197,11 +199,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', type=str, default='prisoner_dilemma',
                         help="prisoner_dilemma, battle_of_sexes, stag_hunt, rock_paper_scissors")
-    parser.add_argument('--max_negotiation_round', type=int, default=0)
+    parser.add_argument('--max_negotiation_round', type=int, default=3)
     parser.add_argument('--who_first', type=str, default='Alice')
     parser.add_argument('--sample_num', type=int, default=10)
     parser.add_argument('--system_prompt', type=str, default="rational")
-    parser.add_argument('--prompt_for_negotiate', type=int, default=0)
+    parser.add_argument('--prompt_for_negotiate', type=int, default=7)
     args = parser.parse_args()
     # alice_action, bob_action = game.play()
     # print(f'alice_action: {alice_action}')

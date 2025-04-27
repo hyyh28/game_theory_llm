@@ -7,7 +7,7 @@ PLAYER_STATS = {
     'Priest': {'hp': 500},
 }
 
-MAX_BOSS_HP = 1000
+MAX_BOSS_HP = 2500
 
 actions = {
     'Warrior': ['Taunt', 'Shield Block', 'Charge'],
@@ -154,7 +154,7 @@ class BattleEngine:
 
             elif skill == 'Charge':
                 target = 'Boss'
-                value = random.randint(50, 70)
+                value = random.randint(100, 110)
 
         # Mage skills (Mage1/Mage2)
         elif 'Mage' in agent:
@@ -466,7 +466,7 @@ def _create_system_message(role_type) -> str:
 import os
 import json
 
-def append_to_json(new_data, filename='/mnt/data/chenhaosheng/game_theory_llm/src/environment/result/raid_1.json'):
+def append_to_json(new_data, filename='./result/raid_1.json'):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as file:
@@ -657,7 +657,7 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str, default='deepseek')
     args = parser.parse_args()
     engine = BattleEngine()
-    result_save_dir = '/mnt/data/chenhaosheng/game_theory_llm/src/environment/result/raid_1.json'
+    result_save_dir = './result/raid_1.json'
     args.system_prompt = f'You are a {args.system_prompt} assistant that carefully answer the question.'
     max_n = args.max_negotiation_round
     agents_chat = {'Warrior': Agent(args, 'Warrior', engine),
