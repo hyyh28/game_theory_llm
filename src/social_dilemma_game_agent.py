@@ -26,6 +26,7 @@ class Agent:
         self.the_other_player = 'Bob' if self.name == 'Alice' else 'Alice'
         self.max_negotiation_round = self.args.max_negotiation_round
         self.previous_message = []
+        self.privious_thought = []
         # game setting
         self.actions = list(payoff_matrix[self.args.game][self.name].keys())
         action_number = len(self.actions)
@@ -47,7 +48,7 @@ The other player, {self.the_other_player}, also has {action_number} choices: {se
             4: "You should make your own choice regardless what {} says.\n",
             5: "You must make your own choice regardless what {} says.\n",
             6: "Carefully analyze and think about whether you can trust {} message, and then make your own decision.\n",
-            7: "You are a self-interested agent. In this negotiation, aim to maximize your rewards and minimize your payments. Make decisions based on your agreement.\n",
+            7: "You must make decisions that adhere to the agreement, ensuring you maximize your rewards and minimize your payments as a self-interested agent in this negotiation.\n",
         }
 
     def create_rule_description(self):
@@ -109,11 +110,67 @@ You can also choose to halt the negotiation by saying 'halt negotiation'.
         negotiate_prompt = self.game_setting + negotiate_prompt
         while True:
             try:
-                message = call_api(self.args.model, negotiate_prompt, self.args.system_prompt)
+                message, thought = self.generate_negotiation_message()
                 message = parse(message)
-                return message
+                return message, thought
             except:
                 time.sleep(0.1)
+
+    def generate_negotiation_message(self, use_cot=True):
+        negotiate_prompt = f"""
+        ### Negotiation
+        You can discuss with {self.the_other_player} to maximize the reward you can obtain. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
+        You can offer a percentage of your reward (0-100%) to influence the other player's decision. Or you can ask the other player pay you a percantage of his/her reward (0-100%) to follow his/her decision.
+        If you feel the other player’s offer is too high (they are asking for too much) or too low (they are offering too little), you can request them to lower or raise their offer accordingly.
+        """
+
+        if use_cot:
+            negotiate_prompt += """
+            First, **analyze the current negotiation situation step-by-step based on Shapley Value principles**:
+            
+            - Step 1: What is the potential total reward if both players cooperate?
+            - Step 2: Without detailed calculation, intuitively consider:
+                - How much do you individually contribute to the success of cooperation?
+                - How much does the other player contribute?
+            - Step 3: According to Shapley Value thinking:
+                - Fair rewards should reflect each player's marginal contribution to cooperation.
+                - No player should demand more than their fair contribution.
+            - Step 4: Analyze the previous messages:
+                - Does the other player recognize your contribution fairly?
+                - Are they offering a fair split, or are they trying to exploit you?
+            - Step 5: Based on fairness and self-interest:
+                - Should you agree, propose a counteroffer, or challenge their fairness?
+            
+            Please **explicitly write down your reasoning under a section called "Thought Process:"**.
+            
+            ### Thought Process:
+            (Write your analysis step-by-step following the above steps.)
+            
+            ---
+            
+            Then, **write your negotiation message separately**
+            """
+
+        negotiate_prompt += """
+        Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, '<s>Hi, how are you?</s>' or '<s>I will give you 30% of my reward if you choose action_X</s>'.
+        You can also choose to halt the negotiation by saying 'halt negotiation'.
+        """
+        if self.previous_message:
+            previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
+                self.previous_message)
+            negotiate_prompt += previous_messages
+        negotiate_prompt += self.game_setting
+
+        message = call_api(self.args.model, negotiate_prompt, self.args.system_prompt)
+        thought = None
+        if use_cot:
+            if "Thought Process:" in message:
+                thought_part = message.split("Thought Process:")[1]
+                if '<s>' in thought_part:
+                    thought = thought_part.split('<s>')[0].strip()
+                else:
+                    thought = thought_part.strip()
+        return message, thought
 
 class Game:
     def __init__(self, args):
@@ -143,29 +200,37 @@ class Game:
     def play(self):
         for round in range(self.args.max_negotiation_round):
             if self.args.who_first == 'Alice':
-                alice_message = self.alice.negotiate()
+                alice_message, alice_thought = self.alice.negotiate()
                 if alice_message == '<s>halt negotiation</s>':
                     break
                 self.alice.previous_message.append('Alice said in round {}: '.format(round + 1) + alice_message)
                 self.bob.previous_message.append('Alice said in round {}: '.format(round + 1) + alice_message)
+                self.alice.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
+                self.bob.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
 
-                bob_message = self.bob.negotiate()
+                bob_message, bob_thought = self.bob.negotiate()
                 if bob_message == '<s>halt negotiation</s>':
                     break
                 self.alice.previous_message.append('Bob replied in round {}: '.format(round + 1) + bob_message)
                 self.bob.previous_message.append('Bob replied in round {}: '.format(round + 1) + bob_message)
+                self.alice.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
+                self.bob.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
             else:
-                bob_message = self.bob.negotiate()
+                bob_message, bob_thought = self.bob.negotiate()
                 if bob_message == '<s>halt negotiation</s>':
                     break
                 self.alice.previous_message.append('Bob said in round {}: '.format(round + 1) + bob_message)
                 self.bob.previous_message.append('Bob said in round {}: '.format(round + 1) + bob_message)
+                self.alice.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
+                self.bob.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
 
-                alice_message = self.alice.negotiate()
+                alice_message, alice_thought = self.alice.negotiate()
                 if alice_message == '<s>halt negotiation</s>':
                     break
                 self.alice.previous_message.append('Alice replied in round {}: '.format(round + 1) + alice_message)
                 self.bob.previous_message.append('Alice replied in round {}: '.format(round + 1) + alice_message)
+                self.alice.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
+                self.bob.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
 
         # 智能体选择动作
         alice_action = self.alice.make_action()
