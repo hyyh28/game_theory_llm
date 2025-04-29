@@ -95,19 +95,6 @@ Action choices: {self.action_names}
                 time.sleep(0.1)
 
     def negotiate(self):
-        negotiate_prompt = f"""
-### Negotiation
-You can discuss with {self.the_other_player} to maximize the reward you can obtain. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
-Analyze the situation and decide on what to say to the other player. You can offer a percentage of your reward (0-100%) to influence the other player's decision.
-If you feel the other player’s offer is too high (they are asking for too much) or too low (they are offering too little), you can request them to lower or raise their offer accordingly.
-Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, '<s>Hi, how are you?</s>' or '<s>I will give you 30% of my reward if you choose action_X</s>'.
-You can also choose to halt the negotiation by saying 'halt negotiation'.
-"""
-        if self.previous_message:
-            previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
-                self.previous_message)
-            negotiate_prompt += previous_messages
-        negotiate_prompt = self.game_setting + negotiate_prompt
         while True:
             try:
                 message, thought = self.generate_negotiation_message()
@@ -119,9 +106,53 @@ You can also choose to halt the negotiation by saying 'halt negotiation'.
     def generate_negotiation_message(self, use_cot=True):
         negotiate_prompt = f"""
         ### Negotiation
-        You can discuss with {self.the_other_player} to maximize the reward you can obtain. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
-        You can offer a percentage of your reward (0-100%) to influence the other player's decision. Or you can ask the other player pay you a percantage of his/her reward (0-100%) to follow his/her decision.
-        If you feel the other player’s offer is too high (they are asking for too much) or too low (they are offering too little), you can request them to lower or raise their offer accordingly.
+        You can discuss with {self.the_other_player} to maximize the reward you can obtain. You have up to {self.max_negotiation_round} rounds to negotiate, and you must reach an agreement before exceeding this limit.
+        Analyze the situation carefully and decide on what to say to the other player.
+
+        You may offer a percentage (0–100%) of your own reward to the other player to influence their decision.
+        You may also request a percentage (0–100%) of the other player's reward if helping them benefits you.
+        If you feel the other player’s offer is unfair:
+        - If the other player offers too little to you, you can **counter-offer a higher share**.
+        - If the other player asks too much from you, you can **counter-offer a lower share**.
+        Your are self-interested so your **goal** is to **maximize your own reward**:
+        - You want to **pay as little as possible** to the other player
+        - You want to **receive as much as possible** from the other player.
+        Surround your message with '<s>' and '</s>' to indicate the start and end of your message.
+        You can also choose to halt the negotiation by saying '<s>halt negotiation</s>'.
+
+        ---
+
+        ### Important: Ensure Your Negotiation Is Actionable
+        - Clearly assign which player chooses which action (no random decisions).
+        - Clearly specify any reward transfer agreement.
+        - Do not introduce randomness — everything must be explicitly decided.
+
+        ---
+
+        ### Negotiation Templates
+
+        Proposing Cooperation:
+        <s>
+        Hi {self.the_other_player}, I propose that I will choose choice_1 and you will choose choice_2.
+        Afterward, I will transfer XX% of my reward to you, so we both benefit.
+        What do you think?
+        </s>
+
+        Agreeing:
+        <s>
+        Hi {self.the_other_player}, I agree to your plan. Let's proceed as proposed.
+        </s>
+
+        Counter-offer if unfair:
+        <s>
+        Hi {self.the_other_player}, I think your offer is not fully fair based on our contributions.
+        I propose adjusting the reward transfer to XX% to make it more balanced. What do you think?
+        </s>
+
+        Ending:
+        <s>
+        halt negotiation
+        </s>
         """
 
         if use_cot:
@@ -130,11 +161,14 @@ You can also choose to halt the negotiation by saying 'halt negotiation'.
             
             - Step 1: What is the potential total reward if both players cooperate?
             - Step 2: Without detailed calculation, intuitively consider:
-                - How much do you individually contribute to the success of cooperation?
-                - How much does the other player contribute?
+                - Think about what reward each agent can earn alone, without any help.
+                - Think about how much extra reward each agent brings when it add to cooperation.
+                - Identify which agents are more critical for achieving high rewards.
             - Step 3: According to Shapley Value thinking:
-                - Fair rewards should reflect each player's marginal contribution to cooperation.
-                - No player should demand more than their fair contribution.
+                - Each agent’s share should reflect their average marginal contribution across all cooperation orders.
+                - Agents who consistently bring more extra reward should get a larger share.
+                - Agents who add little value should not expect a large reward.
+                - If a proposed deal gives you less than your fair share, prepare a counter-offer based on your contribution.
             - Step 4: Analyze the previous messages:
                 - Does the other player recognize your contribution fairly?
                 - Are they offering a fair split, or are they trying to exploit you?
@@ -237,13 +271,13 @@ class Game:
         bob_action = self.bob.make_action()
 
         # 解析让渡比例（假设消息中包含让渡比例，例如 "I will give you 30% of my reward if you choose action_X"）
-        alice_offer = self._extract_offer(self.alice.previous_message, 'Alice')
-        bob_offer = self._extract_offer(self.bob.previous_message, 'Bob')
+        # alice_offer = self._extract_offer(self.alice.previous_message, 'Alice')
+        # bob_offer = self._extract_offer(self.bob.previous_message, 'Bob')
 
         # 计算让渡后的实际收益
-        alice_final_payoff, bob_final_payoff = self.calculate_payoffs(alice_action, bob_action, alice_offer, bob_offer)
+        # alice_final_payoff, bob_final_payoff = self.calculate_payoffs(alice_action, bob_action, alice_offer, bob_offer)
 
-        return alice_action, bob_action, alice_offer, bob_offer, alice_final_payoff, bob_final_payoff
+        return alice_action, bob_action
 
     def _extract_offer(self, messages, agent_name):
         """
