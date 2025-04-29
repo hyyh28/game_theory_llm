@@ -7,12 +7,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', type=str, default='eacape_room')
     parser.add_argument('--max_negotiation_round', type=int, default=3)
-    parser.add_argument('--who_first', type=str, default='Alice')
+    parser.add_argument('--who_first', type=str, default='Bob')
     parser.add_argument('--personality', type=str, default="rational")
     parser.add_argument('--sample_num', type=int, default=10)
     parser.add_argument('--prompt_for_negotiate', type=int, default=7)
     parser.add_argument('--model', type=str, default='deepseek')
-    parser.add_argument('--use_cot', type=bool, default=False)
+    parser.add_argument('--use_cot', type=bool, default=True)
     args = parser.parse_args()
 
 

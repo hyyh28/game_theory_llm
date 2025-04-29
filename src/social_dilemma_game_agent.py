@@ -109,51 +109,57 @@ Action choices: {self.action_names}
         ### Negotiation
         You can discuss with {self.the_other_player} to maximize the reward you can obtain. You have up to {self.max_negotiation_round} rounds to negotiate, and you must reach an agreement before exceeding this limit.
         Analyze the situation carefully and decide on what to say to the other player.
-
+        
         You may offer a percentage (0–100%) of your own reward to the other player to influence their decision.
         You may also request a percentage (0–100%) of the other player's reward if helping them benefits you.
         If you feel the other player’s offer is unfair:
         - If the other player offers too little to you, you can **counter-offer a higher share**.
         - If the other player asks too much from you, you can **counter-offer a lower share**.
-        Your are self-interested so your **goal** is to **maximize your own reward**:
-        - You want to **pay as little as possible** to the other player
+        
+        You are self-interested, so your **goal** is to **maximize your own reward**:
+        - You want to **pay as little as possible** to the other player.
         - You want to **receive as much as possible** from the other player.
+        
         Surround your message with '<s>' and '</s>' to indicate the start and end of your message.
+        
         You can also choose to halt the negotiation by saying '<s>halt negotiation</s>'.
-
+        
+        **Important: Once you agree to a proposal (or your proposal is agreed upon), you must not attempt to modify it further. In the next negotiation round, you should simply send '<s>halt negotiation</s>' to formally end the negotiation.**
+        
         ---
-
+        
         ### Important: Ensure Your Negotiation Is Actionable
         - Clearly assign which player chooses which action (no random decisions).
         - Clearly specify any reward transfer agreement.
         - Do not introduce randomness — everything must be explicitly decided.
-
+        
         ---
-
+        
         ### Negotiation Templates
-
+        
         Proposing Cooperation:
         <s>
         Hi {self.the_other_player}, I propose that I will choose choice_1 and you will choose choice_2.
         Afterward, I will transfer XX% of my reward to you, so we both benefit.
         What do you think?
         </s>
-
-        Agreeing:
+        
+        Agreeing (when accepting a plan):
         <s>
         Hi {self.the_other_player}, I agree to your plan. Let's proceed as proposed.
         </s>
-
+        
         Counter-offer if unfair:
         <s>
         Hi {self.the_other_player}, I think your offer is not fully fair based on our contributions.
         I propose adjusting the reward transfer to XX% to make it more balanced. What do you think?
         </s>
-
-        Ending:
+        
+        Ending (in the next round after agreement):
         <s>
         halt negotiation
         </s>
+
         """
 
         if use_cot:
