@@ -103,7 +103,8 @@ Action choices: {self.action_names}
             except:
                 time.sleep(0.1)
 
-    def generate_negotiation_message(self, use_cot=True):
+    def generate_negotiation_message(self):
+        use_cot = self.args.use_cot
         negotiate_prompt = f"""
         ### Negotiation
         You can discuss with {self.the_other_player} to maximize the reward you can obtain. You have up to {self.max_negotiation_round} rounds to negotiate, and you must reach an agreement before exceeding this limit.
@@ -239,32 +240,36 @@ class Game:
                     break
                 self.alice.previous_message.append('Alice said in round {}: '.format(round + 1) + alice_message)
                 self.bob.previous_message.append('Alice said in round {}: '.format(round + 1) + alice_message)
-                self.alice.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
-                self.bob.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
+                if self.args.use_cot:
+                    self.alice.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
+                    self.bob.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
 
                 bob_message, bob_thought = self.bob.negotiate()
                 if bob_message == '<s>halt negotiation</s>':
                     break
                 self.alice.previous_message.append('Bob replied in round {}: '.format(round + 1) + bob_message)
                 self.bob.previous_message.append('Bob replied in round {}: '.format(round + 1) + bob_message)
-                self.alice.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
-                self.bob.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
+                if self.args.use_cot:
+                    self.alice.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
+                    self.bob.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
             else:
                 bob_message, bob_thought = self.bob.negotiate()
                 if bob_message == '<s>halt negotiation</s>':
                     break
                 self.alice.previous_message.append('Bob said in round {}: '.format(round + 1) + bob_message)
                 self.bob.previous_message.append('Bob said in round {}: '.format(round + 1) + bob_message)
-                self.alice.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
-                self.bob.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
+                if self.args.use_cot:
+                    self.alice.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
+                    self.bob.privious_thought.append('Bob thought in round {}: '.format(round + 1) + bob_thought)
 
                 alice_message, alice_thought = self.alice.negotiate()
                 if alice_message == '<s>halt negotiation</s>':
                     break
                 self.alice.previous_message.append('Alice replied in round {}: '.format(round + 1) + alice_message)
                 self.bob.previous_message.append('Alice replied in round {}: '.format(round + 1) + alice_message)
-                self.alice.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
-                self.bob.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
+                if self.args.use_cot:
+                    self.alice.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
+                    self.bob.privious_thought.append('Alice thought in round {}: '.format(round + 1) + alice_thought)
 
         # 智能体选择动作
         alice_action = self.alice.make_action()
