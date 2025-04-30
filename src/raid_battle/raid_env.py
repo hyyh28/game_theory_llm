@@ -64,6 +64,7 @@ class BattleEngine:
         # Player turns
         for agent in order:
             if self.state['players'][agent]['hp'] <= 0:
+                i += 1
                 continue
             # action = self.policy_dict[agent](agent, self.state, self.cooldowns)
             actions[agent] = action[i]
