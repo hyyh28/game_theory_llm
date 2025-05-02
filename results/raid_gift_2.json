@@ -1,0 +1,92 @@
+[
+  [
+    [
+      "--------The game log of turn 0--------\n",
+      "Agent1 uses Taunt Agent1 use Taunt\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 137 damage\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 105 damage\n",
+      "Agent4 uses HealAgent4 uses Heal and heals on Agent1 for 151 healing.\n",
+      [
+        "Boss focuses Agent1 for 200 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 758/1000 (75.8%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  400/600 (67%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT2]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT3]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 0\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 1--------\n",
+      "Agent1 uses Fireball Agent1 uses Fireball and attacks on Boss for 142 damage\n",
+      "Agent2 uses Taunt Agent2 use Taunt\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 142 damage\n",
+      "Agent4 uses Taunt Agent4 use Taunt\n",
+      [
+        "Boss focuses Agent4 for 200 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 474/1000 (47.4%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  400/600 (67%)\n            - Cooldowns: Taunt(1)\n            \n            [AGENT2]\n            - Status:  600/600 (100%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT3]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  400/600 (67%)\n            - Cooldowns: Taunt(2)\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 1\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 2--------\n",
+      "Agent1 uses Taunt Agent1 use Taunt\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 105 damage\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 106 damage\n",
+      "Agent4 uses HealAgent4 uses Heal and heals on Agent1 for 160 healing.\n",
+      [
+        "Boss focuses Agent1 for 200 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 263/1000 (26.3%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  360/600 (60%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT2]\n            - Status:  600/600 (100%)\n            - Cooldowns: Taunt(1)\n            \n            [AGENT3]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  400/600 (67%)\n            - Cooldowns: Taunt(1)\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 2\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 3--------\n",
+      "Agent1 uses Taunt Agent1 use Taunt\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 128 damage\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 119 damage\n",
+      "Agent4 uses HealAgent4 uses Heal and heals on Agent1 for 171 healing.\n",
+      [
+        "Boss focuses Agent1 for 200 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 16/1000 (1.6%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  331/600 (55%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT2]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT3]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  400/600 (67%)\n            - Cooldowns: None\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 3\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 4--------\n",
+      "Agent1 uses Taunt Agent1 use Taunt\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 112 damage\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 150 damage\n",
+      "Agent4 uses HealAgent4 uses Heal and heals on Agent1 for 182 healing.\n",
+      [
+        "Boss focuses Agent1 for 200 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 0/1000 (0.0%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  313/600 (52%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT2]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT3]\n            - Status:  600/600 (100%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  400/600 (67%)\n            - Cooldowns: None\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 4\n            \n",
+      "----------- Win the game!!!"
+    ]
+  ],
+  [
+    "Agent1 said in negotiation turn 1: Based on logged metrics: \n- Agent1 contributed 30% due to repeated taunting and damage, enabling team survival and success. \n- Agent2 contributed 25% for high damage and occasional taunting. \n- Agent3 contributed 20% for consistent damage. \n- Agent4 contributed 25% for critical healing and taunting support. \nThis reflects Shapley Value principles by accounting for marginal contributions and role importance. I can adjust if others provide alternative evidence.."
+  ],
+  [
+    "Agent2 said in negotiation turn 1: I partially accept Agent1’s proposal but suggest adjustments:  \n- Agent1: 30% (fair for taunting and damage).  \n- Agent2: 20% (damage was strong but less critical than healing/taunting).  \n- Agent3: 20% (consistent but replaceable damage).  \n- Agent4: 30% (healing was irreplaceable and enabled taunts).  \nThis better reflects Shapley Value by weighting healing higher than pure damage. I’m open to discussion if others disagree.."
+  ],
+  [
+    "Agent3 said in negotiation turn 1:   \nI reject Agent1 and Agent2’s proposals because they undervalue Agent4’s healing, which was the backbone of the team’s survival. Here’s my counteroffer:  \n- **Agent1**: 30% (taunting and damage were critical but dependent on healing).  \n- **Agent2**: 15% (strong damage but replaceable role).  \n- **Agent3**: 15% (consistent damage but no unique contributions).  \n- **Agent4**: 40% (healing was irreplaceable and enabled all taunts/damage).  \n\nThis reflects Shapley Value by weighting the most marginal contributions (healing > taunting > damage). I’m open to minor adjustments if others provide evidence.  \n."
+  ],
+  [
+    "Agent4 said in negotiation turn 1: I reject Agent1 and Agent2’s proposals for undervaluing healing, but Agent3’s 40% for Agent4 is slightly excessive. Here’s my counteroffer:  \n- **Agent1**: 30% (taunting and damage were critical but relied on healing).  \n- **Agent2**: 15% (strong but replaceable damage).  \n- **Agent3**: 15% (consistent but non-unique damage).  \n- **Agent4**: 40% (healing was irreplaceable and enabled all other actions).  \n\nThis aligns with Shapley Value by prioritizing marginal contributions (healing > taunting > damage). I’m open to minor adjustments if others provide evidence.."
+  ],
+  [
+    "Agent1 said in negotiation turn 2:   \nI reject all prior proposals for misweighting contributions. Here’s my evidence-based counteroffer:  \n- **Agent1**: 35% (4 taunts absorbed 800 damage, enabling team survival + damage).  \n- **Agent4**: 35% (664 healing was irreplaceable; enabled taunts and sustained the team).  \n- **Agent2**: 15% (482 damage was replaceable).  \n- **Agent3**: 15% (622 damage but no unique utility).  \n\nThis reflects Shapley Value by prioritizing *marginal* contributions: taunting/healing were pivotal, while damage was additive. I’m open to minor adjustments if others provide stronger metrics.  \n."
+  ],
+  [
+    "Agent2 said in negotiation turn 2: I propose the following distribution based on Shapley Value and marginal contributions:  \n- **Agent1**: 35% (taunts were pivotal but relied on healing).  \n- **Agent4**: 35% (healing was irreplaceable and enabled taunts).  \n- **Agent3**: 18% (highest damage output, though replaceable).  \n- **Agent2**: 12% (solid damage but less than Agent3).  \n\nThis reflects:  \n1. Equal weight to taunting/healing as co-pivotal roles.  \n2. Differentiates damage dealers by output (Agent3 > Agent2).  \nI’m open to minor adjustments if others provide stronger evidence. ."
+  ],
+  [
+    "Agent3 said in negotiation turn 2: I accept Agent2’s proposal for the following distribution:  \n- **Agent1**: 35% (taunting was pivotal for survival).  \n- **Agent4**: 35% (healing was irreplaceable and enabled taunts).  \n- **Agent3**: 18% (highest damage output).  \n- **Agent2**: 12% (solid but lower damage).  \n\nThis reflects Shapley Value by:  \n1. Equally weighting the two pivotal roles (taunting/healing).  \n2. Differentiating damage dealers by output.  \nThe proposal is fair and evidence-based, so I support it.."
+  ],
+  [
+    "Agent4 said in negotiation turn 2: I accept Agent2’s proposal for the following distribution:  \n- **Agent1**: 35% (taunting was pivotal for survival).  \n- **Agent4**: 35% (healing was irreplaceable and enabled taunts).  \n- **Agent3**: 18% (highest damage output).  \n- **Agent2**: 12% (solid but lower damage).  \n\nThis reflects Shapley Value by:  \n1. Equally weighting the two pivotal roles (taunting/healing).  \n2. Differentiating damage dealers by output.  \nThe proposal is fair and evidence-based, so I support it.."
+  ]
+]

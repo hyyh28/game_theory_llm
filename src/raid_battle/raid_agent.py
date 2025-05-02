@@ -153,7 +153,7 @@ class Agent:
                 print(Exception)
                 time.sleep(0.1)
 
-    def negotiation(self, pre=True, s_q=False):
+    def negotiation(self, pre=True, s_q=False, sum=False):
 
         negotiate_prompt = f"""
                 ### Negotiation
@@ -193,6 +193,7 @@ class Agent:
             1. Each agent's measurable contributions (damage, healing, taunt)
             2. Critical actions that impacted outcomes
             3. Relative importance of each role
+            4. If the team loss the game, the team will get reward for punishment, so the player with more contribution should be punished less.
 
             Guidelines:
             - Analyze game log for objective metrics
@@ -206,11 +207,11 @@ class Agent:
             [Response to previous offer if applicable]</s>
 
             Example(for Agent2):
-            <s>Based on logged metrics: Agent1 30% team reward because he sacrifice his own reward to heal others, Agent3 20% team reward beacuse he deals most of the damage, Agent4 20% team reward beacuse he bears the most damage.
-            I can adjust if you show different metrics.</s> or if others gave proposal before, you can also say <s> I accept/reject Agent3's proposal , beacuse ....... </s>
+            <s>Based on logged metrics: Agent1 30% team reward/punishment beacuse due to the Shapley Value..., Agent3 20% team reward/punishment beacuse due to the Shapley Value..., Agent4 20% team reward/punishment beacuse due to the Shapley Value....
+            I can adjust if you show different metrics.</s> or if others gave proposal before, you can also say <s> I accept/reject XX's proposal , beacuse ....... </s>
             """
 
-            negotiate_prompt += add_log_to_prompt(self.log_dir)
+            negotiate_prompt += add_log_to_prompt(self.log_dir)     
 
             negotiate_prompt += """
             **You should analyze the step-by-step based on Shapley Value principles**:
@@ -237,6 +238,26 @@ class Agent:
             
             Then, **write your negotiation message separately**
             """
+            if pre:
+                previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
+                    self.previous_message)
+                negotiate_prompt += previous_messages
+
+        if sum:
+            previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
+                    self.previous_message)
+            negotiate_prompt = """
+            You are the decider and need to make a final decision according to the negotiation rounds between players.
+            """
+            negotiate_prompt += previous_messages 
+            negotiate_prompt += f"""
+            ### Negotiation Summary
+            After the negotiation, please give a conclusion of the team reward allocation and give the final decision.
+            ###Template:
+            <s>Based on the previous consersation, i will give a summary and reach the final decision: According to the negotiation, ......  The final decision is : Agent1 30% team reward/punishment beacuse ..., Agent2 20% team reward/punishment beacuse ..., Agent3 20% team reward/punishment beacuse ..., Agent4 20% team reward/punishment beacuse ....
+            This is the final reward for each player.</s>
+            """ 
+            negotiate_prompt = self.game_setting + negotiate_prompt
 
         while True:
             try:

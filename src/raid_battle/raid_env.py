@@ -152,6 +152,10 @@ class BattleEngine:
         cooldown = 0
         
         if skill == 'Taunt':
+            if self.state['aggro']:
+                log += f" {agent} use Taunt, but the boss is already aggroed, so the action doesn't work !!!\n"
+                self.turn_log.append(log)
+                return
             target = 'Boss'
             cooldown = 3
             self.cooldowns[agent][skill] = cooldown
