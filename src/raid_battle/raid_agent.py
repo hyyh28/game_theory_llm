@@ -253,7 +253,9 @@ class Agent:
             negotiate_prompt += f"""
             ### Negotiation Summary
             After the negotiation, please give a conclusion of the team reward allocation and give the final decision.
-            ###Template:
+
+            ###Template: You should answer like following.
+
             <s>Based on the previous consersation, i will give a summary and reach the final decision: According to the negotiation, ......  The final decision is : Agent1 30% team reward/punishment beacuse ..., Agent2 20% team reward/punishment beacuse ..., Agent3 20% team reward/punishment beacuse ..., Agent4 20% team reward/punishment beacuse ....
             This is the final reward for each player.</s>
             """ 
