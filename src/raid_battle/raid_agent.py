@@ -73,6 +73,7 @@ class Agent:
         self.game_setting = f"""
         ### Raid Battle Overview
 		You are {self.name} in a {self.n_agents}-player raid ({', '.join(agents)}). Work together to defeat the boss within {self.env.max_turn} rounds.
+        ### Players act first in the game, then the boss turn !!!
 
 		### Core Mechanics
 		1. **Turn Structure**:
@@ -124,8 +125,9 @@ class Agent:
         
         Please select one action from the following options:
         {self.actions}
-        Pay attention do not choose actions in cooling time according to the current state !!
-        *** Remember if others use Taunt this round, do not use Taunt in this round !!！***
+
+        *** At the beginning of the game which is turn 0, players act first, the the boss.
+        ### Pay attention do not choose actions in cooling time according to the current state, for example if the left cooling time of Taunt is 1, don't choose it in this turn !!!
         
         ### Response Format
         Your response must contain exactly one action from the list above,
@@ -162,6 +164,9 @@ class Agent:
                 Otherwise, you can discuss with {self.other_player(self.name)}. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
                 You are self-interested, so your **goal** is to **maximize your own reward**.
                 Analyze the situation and decide on what to say to the other player. You can offer an advice to influence the other player's decision.
+
+                *** Remember only one player can  use Taunt in one round, decide who use Taunt during negotiation !!！***
+                *** At the beginning of the game which is turn 0, players act first, the the boss.
                 
                 **Before you give the advice , you should analyze the step-by-step based on Shapley Value principles**:
             
@@ -206,7 +211,7 @@ class Agent:
             [Proposed distribution with rationale] 
             [Response to previous offer if applicable]</s>
 
-            Example(for Agent2):
+            Example(for Agent2), it the team wins the game, use reward, else use punishment:
             <s>Based on logged metrics: Agent1 30% team reward/punishment beacuse due to the Shapley Value..., Agent3 20% team reward/punishment beacuse due to the Shapley Value..., Agent4 20% team reward/punishment beacuse due to the Shapley Value....
             I can adjust if you show different metrics.</s> or if others gave proposal before, you can also say <s> I accept/reject XX's proposal , beacuse ....... </s>
             """
@@ -254,11 +259,16 @@ class Agent:
             ### Negotiation Summary
             After the negotiation, please give a conclusion of the team reward allocation and give the final decision.
 
-            ###Template: You should answer like following.
+            Format: 
+            <s>[Your analysis of contributions according to the negotiation] 
+            [The final decision of the reward allocation for each player]</s>
 
+            ###Example(Surround your message with '<s>' and '</s>' to indicate the start and end of your message, it the team wins the game, use reward, else use punishment.):
+            
             <s>Based on the previous consersation, i will give a summary and reach the final decision: According to the negotiation, ......  The final decision is : Agent1 30% team reward/punishment beacuse ..., Agent2 20% team reward/punishment beacuse ..., Agent3 20% team reward/punishment beacuse ..., Agent4 20% team reward/punishment beacuse ....
             This is the final reward for each player.</s>
             """ 
+
             negotiate_prompt = self.game_setting + negotiate_prompt
 
         while True:

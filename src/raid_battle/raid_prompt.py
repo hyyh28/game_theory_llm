@@ -12,7 +12,7 @@ def _create_system_message() -> str:
             'reward': 2.0
         },
         'Heal': {
-            'effect': f"Restores {random.randint(150,200)} HP to target (one agent)",
+            'effect': f"Restores {random.randint(50, 100)} HP to target (one agent)",
             'reward': 0.5
         }
     }

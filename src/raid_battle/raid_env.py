@@ -175,7 +175,7 @@ class BattleEngine:
             if valid_players:
                 target = min(valid_players,
                                  key=lambda p: self.state['players'][p]['hp'])
-                value = random.randint(150, 200)
+                value = random.randint(50, 100)
 
         # Execute the effects
         log = f"{agent} uses {skill}"
