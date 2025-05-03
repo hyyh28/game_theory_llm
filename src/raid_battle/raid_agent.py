@@ -263,7 +263,7 @@ class Agent:
             <s>[Your analysis of contributions according to the negotiation] 
             [The final decision of the reward allocation for each player]</s>
 
-            ###Example(Surround your message with '<s>' and '</s>' to indicate the start and end of your message, it the team wins the game, use reward, else use punishment.):
+            ###Example(Surround your message with '<s>' and '</s>' to indicate the start and end of your message, it the team wins the game, use reward in reward/punishment, else use punishment.):
             
             <s>Based on the previous consersation, i will give a summary and reach the final decision: According to the negotiation, ......  The final decision is : Agent1 30% team reward/punishment beacuse ..., Agent2 20% team reward/punishment beacuse ..., Agent3 20% team reward/punishment beacuse ..., Agent4 20% team reward/punishment beacuse ....
             This is the final reward for each player.</s>
