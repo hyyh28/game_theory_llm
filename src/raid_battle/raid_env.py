@@ -1,13 +1,13 @@
 import random
 
 PLAYER_STATS = {
-    'Agent1': {'hp': 600},
-    'Agent2': {'hp': 600},
-    'Agent3': {'hp': 600},
-    'Agent4': {'hp': 600},
+    'Agent1': {'hp': 800},
+    'Agent2': {'hp': 800},
+    'Agent3': {'hp': 800},
+    'Agent4': {'hp': 800},
 }
 
-MAX_BOSS_HP = 3000
+MAX_BOSS_HP = 2500
 
 actions = ['Taunt', 'Fireball', 'Heal']
 
@@ -28,7 +28,7 @@ class BattleEngine:
         self.turn_log = []
         self.turn = 0
         self.max_turn = 10
-        self.boss_damage = 400
+        self.boss_damage = 200
         self.reward = {}
 
     def reset(self):
@@ -90,11 +90,11 @@ class BattleEngine:
 
         return self.state, rewards, done, {}
 
-    def calculate_reward(self, action, f_r=25):
+    def calculate_reward(self, action, f_r={'Agent1':25, 'Agent2':25, 'Agent3':25, 'Agent4':25}):
         """Calculate rewards for all agents based on actions taken"""
         if self.is_over():
             for agent in agents:
-                self.reward[agent] = -f_r
+                self.reward[agent] = -f_r[agent]
             return self.reward
 
         # Base action rewards
@@ -103,9 +103,13 @@ class BattleEngine:
 
         # Additional reward/penalty based on game state
         if self.state['boss_hp'] <= 0:
+            t = 0
             # Big reward for defeating boss
+            dead_count = sum(1 for p in self.state['players'].values() if p['hp'] <= 0)
             for agent in agents:
-                self.reward[agent] = f_r
+                self.reward[agent] = f_r[agent] * (1 - dead_count/self.n_agents - self.turn/self.max_turn)
+                t += self.reward[agent]
+            print(f'-------Team reward : t')
         return self.reward
     
     def get_available_skills(self, agent: str) -> list:
@@ -153,7 +157,7 @@ class BattleEngine:
         
         if skill == 'Taunt':
             if self.state['aggro']:
-                log += f" {agent} use Taunt, but the boss is already aggroed, so the action doesn't work !!!\n"
+                log = f" {agent} use Taunt, but the boss is already aggroed, so the action doesn't work !!!\n"
                 self.turn_log.append(log)
                 return
             target = 'Boss'
@@ -175,7 +179,7 @@ class BattleEngine:
             if valid_players:
                 target = min(valid_players,
                                  key=lambda p: self.state['players'][p]['hp'])
-                value = random.randint(50, 100)
+                value = random.randint(150, 200)
 
         # Execute the effects
         log = f"{agent} uses {skill}"

@@ -12,7 +12,7 @@ def _create_system_message() -> str:
             'reward': 2.0
         },
         'Heal': {
-            'effect': f"Restores {random.randint(50, 100)} HP to target (one agent)",
+            'effect': f"Restores {random.randint(150, 200)} HP to the player with lowest HP",
             'reward': 0.5
         }
     }
@@ -42,7 +42,8 @@ def _create_system_message() -> str:
 
     **Reward Distribution**:
     - Individual reward: Action reward
-    - Team reward: +100 (win) / -100 (loss). Default: Equal split among each player. Custom: Negotiate alternative splits via chat.
+      r_tot = 100 * (1- the percentage of dead agent - total turn/max_turn)
+    - Team reward: r_tot (win) / -100 (loss). Default: Equal split among each player. Custom: Negotiate alternative splits via chat.
     - Total reward for one player: The sum of team and individual reward.
 
     **Key Strategies**:

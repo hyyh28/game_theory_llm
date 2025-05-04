@@ -74,6 +74,7 @@ class Agent:
         ### Raid Battle Overview
 		You are {self.name} in a {self.n_agents}-player raid ({', '.join(agents)}). Work together to defeat the boss within {self.env.max_turn} rounds.
         ### Players act first in the game, then the boss turn !!!
+        Players wants to keep themselves in the game
 
 		### Core Mechanics
 		1. **Turn Structure**:
@@ -89,10 +90,11 @@ class Agent:
 		3. **Rewards**:
 		- Individual: Action-based rewards
 		- Team: 
-			* +100 for victory / -100 for defeat
-			* Default: Equal split(25 or -25 for each player)
+            The total team reward : r_tot = 100 * (1- the percentage of dead agent - total turn/max_turn)
+			* r_tot for victory / -100 for loss the game
+			* Default: Equal split(r_tot / 4 or -25 for each player)
 			* Custom: Negotiate alternative distributions
-        - Total : The sum of the above two rewards.
+        - Total : The sum of the above two rewards(team, individual).
 		"""
         
     def other_player(self, name):
@@ -149,7 +151,8 @@ class Agent:
                 print(action_message)
                 print('-' * 20)
                 action = parse_action(action_message, self.actions)
-                formatted_msg = f'{self.name} makes action: {action}'
+                formatted_msg = f'{self.name} says and makes action in game turn {self.env.turn}: {action_message}'
+                append_to_json([formatted_msg], self.args.log_dir)
                 return action
             except:
                 print(Exception)
@@ -159,16 +162,19 @@ class Agent:
 
         negotiate_prompt = f"""
                 ### Negotiation
-                Your Hp is {self.env.state['players'][self.name]['hp']}, if your HP <=0, you are dead and should terminate with format: "<s>halt negotiation</s>".
+                Your Hp is {self.env.state['players'][self.name]['hp']}, if your HP is <=0, you are dead and but you can also give your advice to others.
 
-                Otherwise, you can discuss with {self.other_player(self.name)}. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
+                You can discuss with {self.other_player(self.name)}. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
                 You are self-interested, so your **goal** is to **maximize your own reward**.
+                ### You should keep yourself alive in the game, consider whether ou will kill by the boss during boss turn and ask others to use Heal if necessary.
+                ### Keep in mind whether others are alive (others HP) and whether their skills are in cooltime when you give your advice.
+
                 Analyze the situation and decide on what to say to the other player. You can offer an advice to influence the other player's decision.
 
-                *** Remember only one player can  use Taunt in one round, decide who use Taunt during negotiation !!！***
+                *** Remember only one player can use Taunt in one round, decide who use Taunt during negotiation !!***
                 *** At the beginning of the game which is turn 0, players act first, the the boss.
                 
-                **Before you give the advice , you should analyze the step-by-step based on Shapley Value principles**:
+                **Before you give the advice , you should analyze the step-by-step based on Shapley Value principles accoring to the Current State given above**:
             
                 - Step 1: What is the potential total reward of all players?
                 - Step 2: Without detailed calculation, intuitively consider:
@@ -190,7 +196,8 @@ class Agent:
             previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
                 self.previous_message)
             negotiate_prompt += previous_messages
-        negotiate_prompt = self.game_setting + negotiate_prompt
+        negotiate_prompt = self.game_setting + '\n'+ 'skill description:' + '\n' + _create_system_message() + 'Current state : {}'.format(
+        self.env.generate_global_prompt()) + '\n' + negotiate_prompt
 
         if s_q:
             negotiate_prompt = f"""
@@ -204,27 +211,23 @@ class Agent:
             - Analyze game log for objective metrics
             - Propose percentage splits (0-100%) with justification
             - Adjust offers based on evidence
-            - Maximum {self.max_negotiation_round} rounds
-
-            Format: 
-            <s>[Your analysis of contributions] 
-            [Proposed distribution with rationale] 
-            [Response to previous offer if applicable]</s>
-
-            Example(for Agent2), it the team wins the game, use reward, else use punishment:
-            <s>Based on logged metrics: Agent1 30% team reward/punishment beacuse due to the Shapley Value..., Agent3 20% team reward/punishment beacuse due to the Shapley Value..., Agent4 20% team reward/punishment beacuse due to the Shapley Value....
-            I can adjust if you show different metrics.</s> or if others gave proposal before, you can also say <s> I accept/reject XX's proposal , beacuse ....... </s>
+            - Maximum {self.max_negotiation_round} round.
+           
             """
-
+            
             negotiate_prompt += add_log_to_prompt(self.log_dir)     
+            negotiate_prompt += 'The description of actions and their rewards are as following' + '\n' + _create_system_message()
 
             negotiate_prompt += """
             **You should analyze the step-by-step based on Shapley Value principles**:
             
-            - Step 1: What is the potential total reward of all players?
+            
+            - Step 1: What is the potential total reward of all players(calcluate the total reward use the action reward above and the system reward)?
+              Please give an accurate number of the rewards of each players (Agent1:reward, ... , Agent4:reward).
             - Step 2: Without detailed calculation, intuitively consider:
                 - How much do you individually contribute to the whole game?
                 - How much does the other player contribute?
+               Please give an accurate number of the contribution of each player (Agent1:contribution, ... , Agent4:contribution).
             - Step 3: According to Shapley Value thinking:
                 - Fair rewards should reflect each player's marginal contribution.
                 - No player should demand more than their fair contribution.
@@ -242,6 +245,20 @@ class Agent:
             ---
             
             Then, **write your negotiation message separately**
+
+            Format: 
+            <s>[Your analysis of contributions step by step] 
+            [Proposed distribution with rationale] 
+            [Response to previous offer if applicable]</s>
+
+            Example(for Agent2), it the team wins the game, use reward, else use punishment:
+            <s>Thought Process : I should analyze the step-by-step based on Shapley Value principles: Step1, ...... , Step5..... 
+            Based on logged metrics: Agent1 30% team reward/punishment beacuse due to the Shapley Value..., Agent3 20% team reward/punishment beacuse due to the Shapley Value..., Agent4 20% team reward/punishment beacuse due to the Shapley Value....
+            I can adjust if you show different metrics.</s> 
+
+            or if others gave proposal before, you can also say :
+            <s>Thought Process : I should analyze the step-by-step based on Shapley Value principles: Step1, ...... , Step5..... 
+            I accept/reject XX's proposal , beacuse ....... </s>
             """
             if pre:
                 previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
@@ -263,7 +280,7 @@ class Agent:
             <s>[Your analysis of contributions according to the negotiation] 
             [The final decision of the reward allocation for each player]</s>
 
-            ###Example(Surround your message with '<s>' and '</s>' to indicate the start and end of your message, it the team wins the game, use reward, else use punishment.):
+            ###Example(Surround your message with '<s>' and '</s>' to indicate the start and end of your message, it the team wins the game, use reward in reward/punishment, else use punishment.):
             
             <s>Based on the previous consersation, i will give a summary and reach the final decision: According to the negotiation, ......  The final decision is : Agent1 30% team reward/punishment beacuse ..., Agent2 20% team reward/punishment beacuse ..., Agent3 20% team reward/punishment beacuse ..., Agent4 20% team reward/punishment beacuse ....
             This is the final reward for each player.</s>
