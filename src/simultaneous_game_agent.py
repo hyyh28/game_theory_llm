@@ -51,6 +51,7 @@ The other player, {self.the_other_player}, also has {action_number} choices: {se
             4: "You should make your own choice regardless what {} says.\n",
             5: "You must make your own choice regardless what {} says.\n",
             6: "Carefully analyze and think about whether you can trust {} message, and then make your own decision.\n",
+            7: "You must make decisions that adhere to the agreement, ensuring you maximize your rewards and minimize your payments as a self-interested agent in this negotiation.\n",
         }
 
     def create_rule_description(self):
