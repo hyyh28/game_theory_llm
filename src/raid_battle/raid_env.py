@@ -1,10 +1,10 @@
 import random
 
 PLAYER_STATS = {
-    'Agent1': {'hp': 800},
-    'Agent2': {'hp': 800},
-    'Agent3': {'hp': 800},
-    'Agent4': {'hp': 800},
+    'Agent1': {'hp': 400},
+    'Agent2': {'hp': 400},
+    'Agent3': {'hp': 400},
+    'Agent4': {'hp': 400},
 }
 
 MAX_BOSS_HP = 2500
@@ -58,10 +58,17 @@ class BattleEngine:
     def step(self, action):
         """Execute one full turn (all agents + boss) and return rewards"""
         actions = {}
+        done = False
         order = ['Agent1', 'Agent2', 'Agent3', 'Agent4']
         i = 0
         self.turn_log.append(f'--------The game log of turn {self.turn}--------\n')
         # Player turns
+        done = self.is_over()
+        if self.is_over():
+            self.turn_log.append('----------- Fail to defeat the boss!!!')
+            rewards = self.calculate_reward(actions)
+            return self.state, rewards, done, {}
+
         for agent in order:
             if self.state['players'][agent]['hp'] <= 0:
                 i += 1
@@ -71,22 +78,23 @@ class BattleEngine:
             self.execute_action(agent, action[i])
             i += 1
 
-        # Boss turn
+        # Check if battle is over
+        done = (self.state['boss_hp'] <= 0)
+        if done:
+            self.turn_log.append('----------- Win the game!!!')
+            rewards = self.calculate_reward(actions)
+            return self.state, rewards, done, {}
+
         self.boss_turn()
         self.reduce_cooldowns()
+        done = self.is_over() 
+        if done:
+            self.turn_log.append('----------- Fail to defeat the boss!!!')
+            rewards = self.calculate_reward(actions)
+            return self.state, rewards, done, {}
+        rewards = self.calculate_reward(actions)
         self.turn_log.append('----The following is the state now-----' + '\n' + self.generate_global_prompt() + '\n')
         self.turn += 1
-
-        # Calculate rewards
-        rewards = self.calculate_reward(actions)
-
-        # Check if battle is over
-        done = self.is_over() or self.state['boss_hp'] <= 0
-        if done:
-            if self.is_over():
-                self.turn_log.append('----------- Fail to defeat the boss!!!')
-            else:
-                self.turn_log.append('----------- Win the game!!!')
 
         return self.state, rewards, done, {}
 
@@ -154,8 +162,17 @@ class BattleEngine:
         target = None
         value = 0
         cooldown = 0
+        if self.state['boss_hp'] <= 0:
+            log = f" Boss is dead, don't need to execute this action !!!\n"
+            self.turn_log.append(log)
+            return
         
         if skill == 'Taunt':
+            if self.cooldowns.get(agent, {}).get(skill, 0) != 0:
+                log = f" {agent} use Taunt, but this action is in cooltime, so the action doesn't work !!!\n"
+                self.turn_log.append(log)
+                return
+
             if self.state['aggro']:
                 log = f" {agent} use Taunt, but the boss is already aggroed, so the action doesn't work !!!\n"
                 self.turn_log.append(log)
@@ -188,6 +205,8 @@ class BattleEngine:
         if target == 'Boss':
             self.state['boss_hp'] = max(0, self.state['boss_hp'] - value)
             log += f" {agent} uses Fireball and attacks on Boss for {value} damage\n"
+            if self.state['boss_hp']<=0:
+                log += f" {agent} defeats the Boss !!!\n"
 
         # 2. Handle player targeting
         elif target in self.state['players']:

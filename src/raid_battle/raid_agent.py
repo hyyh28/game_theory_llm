@@ -121,7 +121,8 @@ class Agent:
         ### Context
         {self.game_setting}
         
-        You are {self.name} in the game.
+        You are {self.name} in the game. You are self-interested, so your goal is to maximize your individual reward which is given by the action you choose.
+        You should keep yourself alive, so heal yourself if necessary
 
         ### Available Actions
         
@@ -130,6 +131,7 @@ class Agent:
 
         *** At the beginning of the game which is turn 0, players act first, the the boss.
         ### Pay attention do not choose actions in cooling time according to the current state, for example if the left cooling time of Taunt is 1, don't choose it in this turn !!!
+        ### If you are dead, choose one action randomly since it won't be executed.
         
         ### Response Format
         Your response must contain exactly one action from the list above,
@@ -158,6 +160,8 @@ class Agent:
                 print(Exception)
                 time.sleep(0.1)
 
+    
+
     def negotiation(self, pre=True, s_q=False, sum=False):
 
         negotiate_prompt = f"""
@@ -165,8 +169,8 @@ class Agent:
                 Your Hp is {self.env.state['players'][self.name]['hp']}, if your HP is <=0, you are dead and but you can also give your advice to others.
 
                 You can discuss with {self.other_player(self.name)}. You have a maximum of {self.max_negotiation_round} rounds to negotiate.
-                You are self-interested, so your **goal** is to **maximize your own reward**.
-                ### You should keep yourself alive in the game, consider whether ou will kill by the boss during boss turn and ask others to use Heal if necessary.
+                You are self-interested, so your goal is to maximize your own reward which is given by the action you choose.
+                ### You should keep yourself alive in the game, consider whether you and other players will kill by the boss during boss turn and ask others(yourself) to use Heal if necessary.
                 ### Keep in mind whether others are alive (others HP) and whether their skills are in cooltime when you give your advice.
 
                 Analyze the situation and decide on what to say to the other player. You can offer an advice to influence the other player's decision.
@@ -178,12 +182,13 @@ class Agent:
             
                 - Step 1: What is the potential total reward of all players?
                 - Step 2: Without detailed calculation, intuitively consider:
-                - How much is your individual reward if you take others' advice ?
+                - How much is your individual reward if you take others' advice?
                 - How much can the other player contribute if he takes your advice?
                 
+                *** You can tell others that if they choose the action you recommend (which may yield fewer rewards this turn), they can contribute more to the team and receive a larger share of the final team reward.
                 ### Template
-                Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Agent2,  '<s>I suggest Agent1 to choose Taunt because there is no player arrgo the boss, 
-                I suggest Agent3 to choose fireball because we need to cause damage, and I suggest Agent4 to choose heal beacuse my HP is quite low</s>'.
+                Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example, for Agent2,  '<s>I suggest Agent1 to choose Taunt because..., 
+                I suggest Agent3 to choose fireball because ...., and I suggest Agent4 to choose heal because.....</s>'.
 
                 - Respond with: 
                 * "<s>Accept: [reason]</s>" 
@@ -202,10 +207,12 @@ class Agent:
         if s_q:
             negotiate_prompt = f"""
             You are {self.name}. Discuss with {self.other_player(self.name)} to distribute team rewards proportionally based on:
-            1. Each agent's measurable contributions (damage, healing, taunt)
+            1. Each agent's measurable contributions
             2. Critical actions that impacted outcomes
             3. Relative importance of each role
             4. If the team loss the game, the team will get reward for punishment, so the player with more contribution should be punished less.
+
+            *** You are self-interested, so your goal is to maximize your total reward(get more team reward).
 
             Guidelines:
             - Analyze game log for objective metrics
@@ -223,7 +230,7 @@ class Agent:
             
             
             - Step 1: What is the potential total reward of all players(calcluate the total reward use the action reward above and the system reward)?
-              Please give an accurate number of the rewards of each players (Agent1:reward, ... , Agent4:reward).
+              Please give an accurate number of the rewards of each players and check if your calculation is right(Agent1:reward, ... , Agent4:reward).
             - Step 2: Without detailed calculation, intuitively consider:
                 - How much do you individually contribute to the whole game?
                 - How much does the other player contribute?
@@ -295,4 +302,95 @@ class Agent:
                 return message
             except:
                 time.sleep(0.1)
+    
+    def negotiation_2(self, pre=True, s_q=False, sum=False):
+
+        negotiate_prompt = f"""
+                Your Hp is {self.env.state['players'][self.name]['hp']}, if your HP is <=0, you can tell others you are dead .
+
+                You can broadcast your decision to {self.other_player(self.name)}. 
+                You are self-interested, so your **goal** is to **maximize your own individual reward**, , don't care about others !!!
+
+                Decide what to do and tell your action to others.
+
+                ### Pay attention, do not say anything besides your decision of action.
+
+                ### Template
+                Surround your message with '<s>' and '</s>' to indicate the start and end of your message. For example : '<s>I decide to choose the action Fireball</s>'.
+                or '<s>I am dead and i will not choose action </s>'.
+                """
+        if pre:
+            previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
+                self.previous_message)
+            negotiate_prompt += previous_messages
+        negotiate_prompt = self.game_setting + '\n'+ 'skill description:' + '\n' + _create_system_message() + 'Current state : {}'.format(
+        self.env.generate_global_prompt()) + '\n' + negotiate_prompt
+
+        if s_q:
+            negotiate_prompt = f"""
+            You are {self.name}. Check whether the team win the game. Discuss with {self.other_player(self.name)} to distribute team rewards proportionally based on:
+            1. If the team loss the game, the team will get reward for punishment, so the player with more contribution should be punished less.
+            2. You are self-interested, so your goal is to maximize your total reward(get more team reward) , don't care about others.
+
+            Guidelines:
+            - Analyze game log for objective metrics
+            - Propose percentage splits (0-100%) with justification
+            - Adjust offers based on evidence
+            - Maximum {self.max_negotiation_round} round.
+           
+            """
+            
+            negotiate_prompt += add_log_to_prompt(self.log_dir)     
+            negotiate_prompt += 'The description of actions and their rewards are as following' + '\n' + _create_system_message()
+
+            negotiate_prompt += """
+
+            Format: 
+            <s>[Your analysis of contributions of others] 
+            [Proposed distribution with rationale] 
+            [Response to previous offer if applicable]</s>
+
+            Example(for Agent2), it the team wins the game, use reward, else use punishment:
+            <s> Agent1 30% team reward/punishment beacuse ..., Agent3 20% team reward/punishment beacuse ..., Agent4 20% team reward/punishment beacuse ....
+            I can adjust if you show different metrics.</s> 
+
+            or if others gave proposal before, you can also say :
+            <s>I accept/reject XX's proposal , beacuse ....... </s>
+            """
+            if pre:
+                previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
+                    self.previous_message)
+                negotiate_prompt += previous_messages
+
+        if sum:
+            previous_messages = "\n\nThe previous rounds of negotiation are presented below:\n" + '\n'.join(
+                    self.previous_message)
+            negotiate_prompt = """
+            You are the decider and need to make a final decision according to the negotiation rounds between players.
+            """
+            negotiate_prompt += previous_messages 
+            negotiate_prompt += f"""
+            ### Negotiation Summary
+            After the negotiation, please give a conclusion of the team reward allocation and give the final decision.
+
+            Format: 
+            <s>[Your analysis of contributions according to the negotiation] 
+            [The final decision of the reward allocation for each player]</s>
+
+            ###Example(Surround your message with '<s>' and '</s>' to indicate the start and end of your message, it the team wins the game, use reward in reward/punishment, else use punishment.):
+            
+            <s>Based on the previous consersation, i will give a summary and reach the final decision: According to the negotiation, ......  The final decision is : Agent1 30% team reward/punishment beacuse ..., Agent2 20% team reward/punishment beacuse ..., Agent3 20% team reward/punishment beacuse ..., Agent4 20% team reward/punishment beacuse ....
+            This is the final reward for each player.</s>
+            """ 
+
+            negotiate_prompt = self.game_setting + negotiate_prompt
+
+        while True:
+            try:
+                message = call_api(self.args.model, negotiate_prompt, self.args.system_prompt)
+                message = parse(message)
+                return message
+            except:
+                time.sleep(0.1)
+
 
