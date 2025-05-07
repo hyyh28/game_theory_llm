@@ -9,13 +9,13 @@ if __name__ == '__main__':
     parser.add_argument('--max_negotiation_round', type=int, default=3)
     parser.add_argument('--who_first', type=str, default='Alice')
     parser.add_argument('--personality', type=str, default="rational")
-    parser.add_argument('--sample_num', type=int, default=10)
-    parser.add_argument('--prompt_for_negotiate', type=int, default=0)
+    parser.add_argument('--sample_num', type=int, default=20)
+    parser.add_argument('--prompt_for_negotiate', type=int, default=7)
     parser.add_argument('--model', type=str, default='deepseek')
     args = parser.parse_args()
 
 
-    result_save_dir = f'result/single_round/{args.model}/{args.game}_{args.personality}_negotiation_{args.max_negotiation_round}.json'
+    result_save_dir = f'result/single_round/{args.model}/{args.game}_{args.personality}_negotiation_{args.max_negotiation_round}_{args.who_first}.json'
 
     args.system_prompt = f'You are a {args.personality} assistant that carefully answer the question.'
     decisions = []
