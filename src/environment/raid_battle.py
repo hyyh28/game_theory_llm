@@ -35,9 +35,9 @@ def load_images():
     global background_img, warrior_img, mage1_img, mage2_img, priest_img, boss_img
     background_img = pygame.image.load('background.png')
     warrior_img = pygame.image.load('warrior.png')
-    mage1_img = pygame.image.load('mage1.png')
-    mage2_img = pygame.image.load('mage2.png')
-    priest_img = pygame.image.load('priest.png')
+    mage1_img = pygame.image.load('warrior.png')
+    mage2_img = pygame.image.load('warrior.png')
+    priest_img = pygame.image.load('warrior.png')
     boss_img = pygame.image.load('boss.png')
 
 # ==== Utility Drawing ====
@@ -104,9 +104,9 @@ def draw_background_and_static():
         draw_bar(screen, x, y - 12, 80, 8, max(0, hp) / max_hp, GREEN)
 
         # Draw name centered under the avatar
-        name_surface = FONT.render(name, True, WHITE)
-        name_rect = name_surface.get_rect(center=(x + 40, y + 90))
-        screen.blit(name_surface, name_rect)
+        # name_surface = FONT.render(name, True, WHITE)
+        # name_rect = name_surface.get_rect(center=(x + 40, y + 90))
+        # screen.blit(name_surface, name_rect)
 
         # Save avatar center for effect rendering
         current_state['players'][name]['pos'] = (x + 40, y + 40)

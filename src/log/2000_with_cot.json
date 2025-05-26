@@ -1,0 +1,93 @@
+[
+  "LLM+STS",
+  [
+    [
+      "--------The game log of turn 0--------\n",
+      "Agent1 uses Taunt Agent1 use Taunt\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 127 damage\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 110 damage\n",
+      "Agent4 uses HealAgent4 uses Heal and heals on Agent1 for 184 healing.\n",
+      [
+        "Boss focuses Agent1 for 100 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 1763/2000 (88.1%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT2]\n            - Status:  400/400 (100%)\n            - Cooldowns: None\n            \n            [AGENT3]\n            - Status:  400/400 (100%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  400/400 (100%)\n            - Cooldowns: None\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 0\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 1--------\n",
+      "Agent1 uses Fireball Agent1 uses Fireball and attacks on Boss for 112 damage\n",
+      "Agent2 uses Taunt Agent2 use Taunt\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 130 damage\n",
+      "Agent4 uses Fireball Agent4 uses Fireball and attacks on Boss for 144 damage\n",
+      [
+        "Boss focuses Agent2 for 100 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 1377/2000 (68.8%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(1)\n            \n            [AGENT2]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT3]\n            - Status:  400/400 (100%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  400/400 (100%)\n            - Cooldowns: None\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 1\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 2--------\n",
+      "Agent1 uses Fireball Agent1 uses Fireball and attacks on Boss for 108 damage\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 124 damage\n",
+      "Agent3 uses Taunt Agent3 use Taunt\n",
+      "Agent4 uses Fireball Agent4 uses Fireball and attacks on Boss for 142 damage\n",
+      [
+        "Boss focuses Agent3 for 100 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 1003/2000 (50.1%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  300/400 (75%)\n            - Cooldowns: None\n            \n            [AGENT2]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(1)\n            \n            [AGENT3]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT4]\n            - Status:  400/400 (100%)\n            - Cooldowns: None\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 2\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 3--------\n",
+      "Agent1 uses Fireball Agent1 uses Fireball and attacks on Boss for 117 damage\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 143 damage\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 107 damage\n",
+      "Agent4 uses Taunt Agent4 use Taunt\n",
+      [
+        "Boss focuses Agent4 for 100 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 636/2000 (31.8%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  300/400 (75%)\n            - Cooldowns: None\n            \n            [AGENT2]\n            - Status:  300/400 (75%)\n            - Cooldowns: None\n            \n            [AGENT3]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(1)\n            \n            [AGENT4]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(2)\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 3\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 4--------\n",
+      "Agent1 uses Taunt Agent1 use Taunt\n",
+      "Agent2 uses Fireball Agent2 uses Fireball and attacks on Boss for 136 damage\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 115 damage\n",
+      "Agent4 uses Fireball Agent4 uses Fireball and attacks on Boss for 142 damage\n",
+      [
+        "Boss focuses Agent1 for 100 damage.\n"
+      ],
+      "----The following is the state now-----\n=== RAID BATTLE STATUS===\n\n        [BOSS STATUS]\n        - HP: 243/2000 (12.2%)\n        - Current Aggro: None\n\n        [PARTY STATUS] (4/4 alive)\n        \n            [AGENT1]\n            - Status:  200/400 (50%)\n            - Cooldowns: Taunt(2)\n            \n            [AGENT2]\n            - Status:  300/400 (75%)\n            - Cooldowns: None\n            \n            [AGENT3]\n            - Status:  300/400 (75%)\n            - Cooldowns: None\n            \n            [AGENT4]\n            - Status:  300/400 (75%)\n            - Cooldowns: Taunt(1)\n            \n            [RESPONSE INSTRUCTIONS]\n            Each agent must respond with actions: ['Taunt', 'Fireball', 'Heal'],\n            based on their current status.\n            \n            The information of your round and the max round.\n            MAX_round = 10\n            Current round = 4\n            \n"
+    ]
+  ],
+  [
+    [
+      "--------The game log of turn 5--------\n",
+      "Agent1 uses Fireball Agent1 uses Fireball and attacks on Boss for 125 damage\n",
+      "Agent2 uses Taunt Agent2 use Taunt\n",
+      "Agent3 uses Fireball Agent3 uses Fireball and attacks on Boss for 133 damage\n Agent3 defeats the Boss !!!\n",
+      " Boss is dead, don't need to execute this action !!!\n",
+      "----------- Win the game!!!"
+    ]
+  ],
+  [
+    "Agent1 said in negotiation turn 1: Thought Process: Based on the Shapley Value principles, I analyzed each agent's contributions and rewards. Agent3 deserves a slightly higher share due to highest damage output and timely taunts, while Agent1's coordination and early taunts also justify a higher share. Agent2 and Agent4 contributed equally but slightly less than Agent1 and Agent3. \nProposed distribution: Agent1: 25%, Agent2: 22.5%, Agent3: 27.5%, Agent4: 25%. \nThis reflects each agent's marginal contribution to the team's success and is fair to all.."
+  ],
+  [
+    "Agent2 said in negotiation turn 1: Thought Process: Based on Shapley Value principles, I analyzed contributions: Agent3 delivered the highest damage (including the killing blow) and timely taunts, justifying the highest share. Agent1's coordination and Agent4's healing/damage are comparable, while Agent2 contributed slightly less. \nProposed distribution: Agent1: 24%, Agent2: 22%, Agent3: 30%, Agent4: 24%. \nThis better reflects marginal contributions, especially Agent3's critical impact. I reject Agent1's proposal as it undervalues Agent3's killing blow.."
+  ],
+  [
+    "Agent3 said in negotiation turn 1: Thought Process: Based on Shapley Value principles, I analyzed contributions: Agent3 delivered the highest damage (including the killing blow) and timely taunts, justifying 30%. Agent1's coordination and early taunts justify 25%. Agent4's healing and consistent damage justify 23%, while Agent2's balanced contributions justify 22%. \nProposed distribution: Agent1: 25%, Agent2: 22%, Agent3: 30%, Agent4: 23%. \nThis better reflects marginal contributions, especially Agent3's critical impact. I reject Agent1's proposal as it undervalues Agent3's killing blow and Agent4's contributions.."
+  ],
+  [
+    "Agent4 said in negotiation turn 1: Thought Process: Based on Shapley Value principles, I analyzed contributions and rewards. Agent3's killing blow and high damage justify 30%. Agent1's coordination and early taunts justify 25%. My healing and consistent damage justify 23%, while Agent2's contributions justify 22%. \nI accept Agent3's proposal but argue for a slight adjustment: Agent1: 25%, Agent2: 22%, Agent3: 30%, Agent4: 23%. This reflects marginal contributions accurately, especially my healing and damage output.."
+  ],
+  [
+    "The final decision : Based on the previous conversation, I will summarize and reach a final decision: According to the negotiation, all agents agree that Agent3 deserves the highest share (30%) due to their highest damage output, timely taunts, and the killing blow. Agent1's coordination and early taunts justify 25%, while Agent4's healing and consistent damage output justify 23%. Agent2's balanced contributions are recognized with 22%. \n\nThe final decision is: \n- Agent1: 25% team reward/punishment because of their coordination and early taunts. \n- Agent2: 22% team reward/punishment because of their balanced but slightly lower contributions. \n- Agent3: 30% team reward/punishment because of their highest damage, killing blow, and timely taunts. \n- Agent4: 23% team reward/punishment because of their healing and consistent damage output. \n\nThis allocation reflects the marginal contributions of each agent accurately and is fair to all. This is the final reward for each player.."
+  ]
+]
