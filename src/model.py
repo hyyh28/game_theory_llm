@@ -5,7 +5,7 @@ from openai import OpenAI
 ####### data generation close-source models #######
 claude_key =  None
 open_ai_key = None
-deepseek_key = "sk-30d3ca4f89664ab3af676bb640a5f7bc"
+deepseek_key = "sk-3226d29685d343f4ba4df8d2f1cd0d1b"
 
 def call_api(model, message, system_prompt):
     if 'sonnet' in model:
