@@ -1,4 +1,5 @@
-from raid_agent import Agent, append_to_json, agents
+# from raid_agent import Agent, append_to_json, agents
+from raid_agent_banzhaf import Agent, append_to_json, agents
 from raid_env import BattleEngine
 import os
 import json
@@ -9,12 +10,12 @@ import numpy as np
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', type=str, default='raid')
-    parser.add_argument('--max_negotiation_round', type=int, default=1)
+    parser.add_argument('--max_negotiation_round', type=int, default=3)
     parser.add_argument('--final_round', type=int, default=1)
     parser.add_argument('--sample_num', type=int, default=10)
     parser.add_argument('--system_prompt', type=str, default="rational")
     parser.add_argument('--model', type=str, default='deepseek')
-    parser.add_argument('--log_dir', default='game_theory_llm/log/2500_with_cot.json')
+    parser.add_argument('--log_dir', default='game_theory_llm/log/2500_with_cot_banzhaf.json')
     args = parser.parse_args()
     engine = BattleEngine()
     args.system_prompt = f'You are a {args.system_prompt} assistant that carefully answer the question.'
